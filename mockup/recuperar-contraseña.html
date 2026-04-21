@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Recuperar Contraseña - SmartFran Cloud</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary-container": "#594c81",
+            "tertiary-fixed": "#6bf6ff",
+            "surface-container-highest": "#e8ddff",
+            "on-error": "#ffffff",
+            "primary": "#8a00cb",
+            "background": "#fdf7ff",
+            "surface-bright": "#fdf7ff",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#e0d4ff",
+            "on-surface": "#1f1144",
+            "tertiary-fixed-dim": "#40dae3",
+            "error-container": "#ffdad6",
+            "surface-variant": "#e8ddff",
+            "surface-tint": "#9300d9",
+            "outline": "#817287",
+            "on-primary-fixed": "#30004a",
+            "on-primary-fixed-variant": "#7000a6",
+            "on-primary-container": "#fef1ff",
+            "on-background": "#1f1144",
+            "surface-container-low": "#f8f1ff",
+            "on-tertiary-fixed-variant": "#004f53",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "secondary": "#63568c",
+            "primary-fixed-dim": "#e6b4ff",
+            "on-secondary-fixed": "#1f1144",
+            "surface-container": "#f3eaff",
+            "on-secondary-fixed-variant": "#4b3e73",
+            "on-tertiary-fixed": "#002022",
+            "tertiary": "#006267",
+            "on-tertiary-container": "#d8fdff",
+            "on-tertiary": "#ffffff",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed": "#e8ddff",
+            "secondary-fixed-dim": "#cebefb",
+            "surface-container-high": "#ede4ff",
+            "outline-variant": "#d3c0d8",
+            "primary-fixed": "#f5d9ff",
+            "inverse-surface": "#35285b",
+            "inverse-primary": "#e6b4ff",
+            "surface": "#fdf7ff",
+            "primary-container": "#ae00ff",
+            "inverse-on-surface": "#f5eeff",
+            "on-surface-variant": "#4f4255",
+            "tertiary-container": "#007d83",
+            "secondary-container": "#d0c0fe"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Manrope"],
+            "label": ["Manrope"]
+          },
+          borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass-card {
+      background: rgba(253, 247, 255, 0.08);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .signature-gradient {
+      background: linear-gradient(135deg, #8a00cb 0%, #ae00ff 100%);
+    }
+
+    .bg-deep-space {
+      background: radial-gradient(circle at top right, #35285b, #0f0035);
+    }
+
+    .glow-accent {
+      filter: blur(80px);
+      background: #ae00ff;
+      opacity: 0.15;
+    }
+  </style>
+</head>
+
+<body
+  class="font-body bg-on-background text-surface selection:bg-primary-fixed-dim selection:text-on-primary-fixed min-h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background Decoration -->
+  <div class="fixed inset-0 bg-deep-space -z-10"></div>
+  <div class="fixed top-[-10%] right-[-10%] w-[40rem] h-[40rem] rounded-full glow-accent -z-10"></div>
+  <div class="fixed bottom-[-20%] left-[-10%] w-[50rem] h-[50rem] rounded-full glow-accent -z-10"
+    style="background: #8a00cb;"></div>
+  <!-- Abstract Vector Pattern Overlay -->
+  <div class="fixed inset-0 opacity-[0.03] pointer-events-none -z-10"
+    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBapcISlL-GIZeGygyQqlT1WQN_8C1suhSHprafEnE_Fgj3Xdh3F5ermCTxmO7seqF7PQGY_ctgvKPQrdgz9WBHXQW2w6pltn9n24vsvP1KzZKpAK-qH7E9o7jl_W2x7ITjVieGUFKQ9l94ATKis5zKnAQ4NEsDiNcEdCT-s1b53zPHB07I4-YkeBY-0WgKHlLhoXQ7OchxJTQzmv_8o-b-s88DhF5UAL1xp81wcAJQfTkLRqdIpFHO3BNcF-cCYN8DUCI_o2D-Cl4');">
+  </div>
+  <!-- Container -->
+  <main class="w-full max-w-6xl px-6 py-12 flex flex-col items-center justify-center relative z-10">
+    <!-- Brand Header (Prominent) -->
+    <header class="mb-10 text-center">
+      <div class="inline-flex items-center justify-center p-4 rounded-lg mb-1">
+        <span class="material-symbols-outlined text-primary-fixed-dim text-5xl"
+          style="font-variation-settings: 'FILL' 1;">
+          cloud
+        </span>
+      </div>
+      <div class="flex justify-center item-center mb-4">
+        <img src="./assets/Smartfran-Cloud-logo.svg" alt="SmartFran Cloud Logo" class="h-20" />
+      </div>
+
+      <p class="text-surface-variant/60 font-medium tracking-wide text-sm uppercase">Velocidad y Precisión en tu Punto
+        de Venta</p>
+    </header>
+    <!-- Glassmorphic Card -->
+    <section class="glass-card w-full max-w-md p-8 md:p-12 rounded-xl shadow-2xl shadow-on-background/50">
+      <div class="mb-8">
+        <h2 class="font-headline text-2xl font-bold text-surface mb-2">Solicitud de Reseteo</h2>
+        <p class="text-surface-variant/70 text-sm leading-relaxed">
+          Introduce tu correo electrónico institucional para recibir las instrucciones de recuperación.
+        </p>
+      </div>
+      <form action="#" class="space-y-8" method="POST">
+        <!-- Input Fields Group -->
+        <div class="space-y-6">
+          <!-- Email Field -->
+          <div class="group">
+            <label class="block text-surface-variant font-label text-sm font-semibold mb-3 px-1" for="email">
+              Correo electrónico
+            </label>
+            <div class="relative">
+              <span
+                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-surface-variant/40 group-focus-within:text-primary-fixed-dim transition-colors">
+                alternate_email
+              </span>
+              <input
+                class="w-full bg-inverse-surface/40 border-none rounded-DEFAULT py-4 pl-12 pr-4 text-surface placeholder:text-surface-variant/30 focus:ring-2 focus:ring-primary-fixed-dim transition-all outline-none text-base"
+                id="email" name="email" placeholder="usuario@smartfran.com" required="" type="email" />
+            </div>
+          </div>
+        </div>
+        <!-- Primary CTA -->
+        <a
+          class="signature-gradient w-full py-4 px-6 rounded-full text-white font-headline font-bold text-lg shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center space-x-2"
+          href="./solicitud-enviada.html">
+          <span>Enviar enlace de recuperación</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </form>
+      <!-- Footer Actions -->
+      <footer class="mt-10 pt-8 border-t border-surface-variant/10 text-center">
+        <a class="inline-flex items-center space-x-2 text-primary-fixed-dim hover:text-primary-fixed transition-colors group"
+          href="./login.html">
+          <span
+            class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+          <span class="font-bold">Volver al inicio de sesión</span>
+        </a>
+      </footer>
+    </section>
+    <!-- Visual Anchor (Subtle) -->
+    <div class="mt-16 w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-8 opacity-40">
+      <div class="flex flex-col items-center text-center space-y-3">
+        <span class="material-symbols-outlined text-primary-fixed-dim text-3xl">bolt</span>
+        <span class="text-xs font-bold uppercase tracking-widest">Sincronización Instantánea</span>
+      </div>
+      <div class="flex flex-col items-center text-center space-y-3">
+        <span class="material-symbols-outlined text-primary-fixed-dim text-3xl">shield</span>
+        <span class="text-xs font-bold uppercase tracking-widest">Seguridad de Grado Bancario</span>
+      </div>
+      <div class="flex flex-col items-center text-center space-y-3">
+        <span class="material-symbols-outlined text-primary-fixed-dim text-3xl">query_stats</span>
+        <span class="text-xs font-bold uppercase tracking-widest">Analítica en Tiempo Real</span>
+      </div>
+    </div>
+  </main>
+  <!-- Optional Floating Decorative Elements -->
+  <div class="hidden lg:block fixed top-20 left-20 w-32 h-32 rounded-lg opacity-10 rotate-12 bg-primary"></div>
+  <div class="hidden lg:block fixed bottom-40 right-40 w-48 h-48 rounded-full opacity-5 bg-tertiary-fixed"></div>
+</body>
+
+</html>

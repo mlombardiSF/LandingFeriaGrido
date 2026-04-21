@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#fdf7ff",
+            "surface-container-low": "#f8f1ff",
+            "surface-container": "#f3eaff",
+            "surface-container-high": "#ede4ff",
+            "surface-container-highest": "#e8ddff",
+            "secondary-fixed": "#e8ddff",
+            "outline-variant": "#d3c0d8",
+            "on-surface": "#1f1144",
+            "primary": "#8a00cb",
+            "primary-container": "#ae00ff",
+            "surface": "#fdf7ff",
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Manrope"],
+          },
+          borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+
+    /* ── Shimmer animation ── */
+    @keyframes shimmer {
+      0%   { background-position: -800px 0; }
+      100% { background-position: 800px 0; }
+    }
+
+    .sk {
+      background: linear-gradient(
+        90deg,
+        #ede4ff 25%,
+        #f8f1ff 50%,
+        #ede4ff 75%
+      );
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 0.75rem;
+    }
+
+    /* ── Fade-out del skeleton + fade-in del contenido ── */
+    #skeleton-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: all;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+    #skeleton-layer.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #real-content {
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+    #real-content.fade-in {
+      opacity: 1;
+    }
+
+    /* Scrollbar discreta */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d3c0d8; border-radius: 10px; }
+
+    /* Panel socio (igual que original) */
+    #socio-panel { width:0; min-width:0; overflow:hidden; transition: width .42s cubic-bezier(.4,0,.2,1), min-width .42s cubic-bezier(.4,0,.2,1), opacity .35s ease; opacity:0; flex-shrink:0; }
+    #socio-panel.open { width:272px; min-width:272px; opacity:1; }
+    #socio-panel-inner { width:272px; }
+
+    /* Buscador */
+    #search-dropdown { position:absolute; top:calc(100% + 8px); left:0; width:100%; background:white; border-radius:1rem; box-shadow:0 20px 60px rgba(31,17,68,.15),0 4px 16px rgba(138,0,203,.08); border:1px solid #e8ddff; overflow:hidden; opacity:0; transform:translateY(-8px) scale(.98); transition:opacity .2s ease,transform .2s ease; pointer-events:none; z-index:200; max-height:420px; overflow-y:auto; }
+    #search-dropdown.open { opacity:1; transform:translateY(0) scale(1); pointer-events:all; }
+    .search-item:hover { background:#f8f1ff; }
+    .search-item.highlighted { background:#f3eaff; }
+    @keyframes result-in { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+    .result-in { animation:result-in .18s ease both; }
+    @keyframes badge-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(138,0,203,.3)} 50%{box-shadow:0 0 0 7px rgba(138,0,203,0)} }
+    .badge-pulse { animation:badge-pulse 2.2s ease infinite; }
+    @keyframes avatar-pop { 0%{transform:scale(.4);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+    .avatar-pop { animation:avatar-pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes slide-in { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:translateX(0)} }
+    .slide-in-1{animation:slide-in .35s .15s ease both}
+    .slide-in-2{animation:slide-in .35s .25s ease both}
+    .slide-in-3{animation:slide-in .35s .35s ease both}
+    .slide-in-4{animation:slide-in .35s .45s ease both}
+    .glass-panel { background:rgba(253,247,255,.8); backdrop-filter:blur(20px); }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; }
+  </style>
+  <!-- Material Symbols (necesario para el contenido real) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+
+<body class="bg-background text-on-surface overflow-hidden h-screen flex flex-col">
+
+<!-- ══════════════════════════════════════════════════
+     CAPA SKELETON — se superpone sobre todo mientras carga
+     ══════════════════════════════════════════════════ -->
+<div id="skeleton-layer" class="bg-background flex flex-col h-screen overflow-hidden">
+
+  <!-- ── TopBar skeleton ── -->
+  <header class="fixed top-0 w-full z-50 bg-[#fdf7ff] flex justify-between items-center px-8 h-20 shadow-xl shadow-[#1f1144]/5">
+    <div class="flex items-center gap-6">
+      <!-- hamburger -->
+      <div class="sk w-6 h-6 rounded-lg"></div>
+      <!-- logo -->
+      <div class="sk w-32 h-8 rounded-xl"></div>
+      <div class="h-8 w-[1px] bg-outline-variant/30 hidden md:block"></div>
+      <!-- buscador -->
+      <div class="sk hidden md:flex w-80 h-9 rounded-full"></div>
+    </div>
+    <div class="flex items-center gap-4">
+      <!-- notif + settings -->
+      <div class="sk w-10 h-10 rounded-full"></div>
+      <div class="sk w-10 h-10 rounded-full"></div>
+      <!-- info usuario -->
+      <div class="hidden md:flex flex-col gap-1.5">
+        <div class="sk w-32 h-2.5 rounded-full"></div>
+        <div class="sk w-44 h-2 rounded-full"></div>
+        <div class="sk w-28 h-2 rounded-full"></div>
+        <div class="sk w-24 h-2 rounded-full"></div>
+      </div>
+      <!-- avatar -->
+      <div class="sk w-10 h-10 rounded-full ml-4"></div>
+    </div>
+  </header>
+
+  <!-- ── Cuerpo principal ── -->
+  <div class="flex flex-1 overflow-hidden pt-20">
+
+    <!-- ── Main catalog skeleton ── -->
+    <main class="flex-1 overflow-y-auto p-6">
+
+      <!-- Barra de categorías / filtros -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="sk w-28 h-9 rounded-full"></div>
+        <div class="sk w-20 h-9 rounded-full"></div>
+        <div class="sk w-24 h-9 rounded-full"></div>
+        <div class="sk w-20 h-9 rounded-full"></div>
+        <div class="sk w-16 h-9 rounded-full ml-auto"></div>
+      </div>
+
+      <!-- Grid de productos -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        <!-- 9 cards skeleton -->
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-16 rounded-full"></div>
+          <div class="sk h-4 w-3/4 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-20 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-20 rounded-full"></div>
+          <div class="sk h-4 w-2/3 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-16 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-14 rounded-full"></div>
+          <div class="sk h-4 w-4/5 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-24 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-18 rounded-full"></div>
+          <div class="sk h-4 w-3/5 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-20 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-12 rounded-full"></div>
+          <div class="sk h-4 w-4/4 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-18 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-16 rounded-full"></div>
+          <div class="sk h-4 w-3/4 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-16 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-20 rounded-full"></div>
+          <div class="sk h-4 w-2/3 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-20 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-14 rounded-full"></div>
+          <div class="sk h-4 w-4/5 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-24 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 flex flex-col gap-3 border border-outline-variant/20 shadow-sm">
+          <div class="sk aspect-square w-full rounded-xl"></div>
+          <div class="sk h-2.5 w-16 rounded-full"></div>
+          <div class="sk h-4 w-3/5 rounded-full"></div>
+          <div class="flex justify-between items-center mt-1">
+            <div class="sk h-5 w-18 rounded-full"></div>
+            <div class="sk w-10 h-10 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ── Right Cart Panel skeleton ── -->
+    <aside class="w-[420px] bg-white shadow-2xl z-20 flex flex-col shrink-0 mt-20">
+
+      <!-- Socio card skeleton -->
+      <div class="p-6 bg-surface-container-low">
+        <div class="bg-white rounded-2xl p-4 shadow-sm" style="box-shadow:0 2px 12px rgba(31,17,68,0.06)">
+          <div class="flex items-center justify-between mb-4">
+            <div class="sk h-3 w-20 rounded-full"></div>
+            <div class="sk h-5 w-28 rounded-lg"></div>
+          </div>
+          <div class="sk h-12 w-full rounded-xl"></div>
+        </div>
+      </div>
+
+      <!-- Orden items skeleton -->
+      <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+        <div class="flex items-center justify-between mb-2">
+          <div class="sk h-5 w-28 rounded-full"></div>
+          <div class="sk h-4 w-16 rounded-full"></div>
+        </div>
+        <!-- Item 1 -->
+        <div class="flex items-center gap-3 py-3" style="border-bottom:1px dashed rgba(211,192,216,0.25)">
+          <div class="sk w-12 h-12 rounded-xl shrink-0"></div>
+          <div class="flex-1 flex flex-col gap-2">
+            <div class="sk h-3.5 w-3/4 rounded-full"></div>
+            <div class="sk h-2.5 w-1/3 rounded-full"></div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="sk h-4 w-16 rounded-full"></div>
+            <div class="sk h-7 w-20 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Item 2 -->
+        <div class="flex items-center gap-3 py-3" style="border-bottom:1px dashed rgba(211,192,216,0.25)">
+          <div class="sk w-12 h-12 rounded-xl shrink-0"></div>
+          <div class="flex-1 flex flex-col gap-2">
+            <div class="sk h-3.5 w-2/3 rounded-full"></div>
+            <div class="sk h-2.5 w-1/4 rounded-full"></div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="sk h-4 w-14 rounded-full"></div>
+            <div class="sk h-7 w-20 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Item 3 -->
+        <div class="flex items-center gap-3 py-3">
+          <div class="sk w-12 h-12 rounded-xl shrink-0"></div>
+          <div class="flex-1 flex flex-col gap-2">
+            <div class="sk h-3.5 w-4/5 rounded-full"></div>
+            <div class="sk h-2.5 w-2/5 rounded-full"></div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="sk h-4 w-20 rounded-full"></div>
+            <div class="sk h-7 w-20 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer / totales skeleton -->
+      <div class="p-6 border-t border-outline-variant/10 flex flex-col gap-4 bg-white">
+        <!-- Subtotal, descuento, total -->
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <div class="sk h-3 w-20 rounded-full"></div>
+            <div class="sk h-3 w-20 rounded-full"></div>
+          </div>
+          <div class="flex justify-between items-center pt-2" style="border-top: 1px dashed rgba(211,192,216,0.4)">
+            <div class="sk h-5 w-16 rounded-full"></div>
+            <div class="sk h-8 w-28 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Botón confirmar pago -->
+        <div class="sk w-full h-16 rounded-full"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+<!-- /skeleton-layer -->
+
+
+<!-- ══════════════════════════════════════════════════
+     CONTENIDO REAL — oculto hasta que el skeleton se va
+     Aquí va embebido el HTML completo del panel de venta.
+     Para la simulación de flujo, reemplazá este bloque
+     por un <script> que haga window.location.href = 'venta-minorista.html'
+     ══════════════════════════════════════════════════ -->
+<div id="real-content" class="contents">
+  <!--
+    OPCIÓN A — Redirección (flujo de navegación entre páginas):
+    El script de abajo ya hace la redirección automáticamente.
+    Descomentar si usás archivos separados.
+
+    OPCIÓN B — Si este archivo YA INCLUYE el HTML del panel real:
+    pegá aquí todo el <body> de venta-minorista.html
+    y el skeleton hará fade-out revelando el contenido.
+  -->
+</div>
+
+
+<script>
+  // ── Configuración de tiempos ──────────────────────────────────────────────
+  // Cambiá estos valores para ajustar la duración del skeleton.
+  const SKELETON_DURATION_MS = 1600;   // Cuánto tiempo se muestra el skeleton (ms)
+  const TARGET_PAGE          = "venta-minorista.html"; // Página destino del flujo
+
+  // ── Modo de operación ─────────────────────────────────────────────────────
+  // "redirect"  → el skeleton desaparece y redirige a TARGET_PAGE (flujo entre archivos)
+  // "inline"    → el skeleton hace fade-out y revela #real-content (todo en un archivo)
+  const MODE = "redirect";
+
+  // ── Lógica ────────────────────────────────────────────────────────────────
+  const skeletonLayer = document.getElementById("skeleton-layer");
+  const realContent   = document.getElementById("real-content");
+
+  window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      skeletonLayer.classList.add("fade-out");
+
+      if (MODE === "redirect") {
+        // Esperamos que termine el fade (450ms) antes de navegar
+        setTimeout(() => {
+          window.location.href = TARGET_PAGE;
+        }, 420);
+
+      } else {
+        // Modo inline: revelamos el contenido ya embebido
+        realContent.classList.add("fade-in");
+        setTimeout(() => {
+          skeletonLayer.remove();
+        }, 500);
+      }
+    }, SKELETON_DURATION_MS);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SmartFran Cloud POS - Start Screen</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#1f1144",
+                        "on-background": "#1f1144",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#f5d9ff",
+                        "tertiary-container": "#007d83",
+                        "surface-tint": "#9300d9",
+                        "on-primary-container": "#fef1ff",
+                        "secondary-fixed-dim": "#cebefb",
+                        "on-surface": "#1f1144",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#006267",
+                        "surface-variant": "#e8ddff",
+                        "secondary-fixed": "#e8ddff",
+                        "on-primary-fixed-variant": "#7000a6",
+                        "on-tertiary-container": "#d8fdff",
+                        "surface-container": "#f3eaff",
+                        "primary-container": "#ae00ff",
+                        "surface-bright": "#fdf7ff",
+                        "on-secondary-container": "#594c81",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#e8ddff",
+                        "surface-dim": "#e0d4ff",
+                        "inverse-surface": "#35285b",
+                        "tertiary-fixed": "#6bf6ff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f8f1ff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004f53",
+                        "on-secondary-fixed-variant": "#4b3e73",
+                        "on-primary-fixed": "#30004a",
+                        "secondary-container": "#d0c0fe",
+                        "background": "#fdf7ff",
+                        "secondary": "#63568c",
+                        "on-surface-variant": "#4f4255",
+                        "outline": "#817287",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#002022",
+                        "surface-container-high": "#ede4ff",
+                        "primary-fixed-dim": "#e6b4ff",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fdf7ff",
+                        "primary": "#8a00cb",
+                        "inverse-primary": "#e6b4ff",
+                        "inverse-on-surface": "#f5eeff",
+                        "outline-variant": "#d3c0d8",
+                        "tertiary-fixed-dim": "#40dae3"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .material-symbols-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .signature-gradient {
+            background: linear-gradient(135deg, #8a00cb 0%, #ae00ff 100%);
+        }
+
+        .glass-header {
+            background: rgba(253, 247, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .tonal-layering-no-borders {
+            border: none !important;
+        }
+
+        body {
+            background-color: #fdf7ff;
+        }
+
+        /* Franchise card states */
+        .franchise-card {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .franchise-card:hover {
+            transform: scale(1.01);
+        }
+        .franchise-card:active {
+            transform: scale(0.97);
+        }
+        .franchise-card.selected {
+            background-color: #e8ddff;
+            border: 2px solid #ae00ff;
+            box-shadow: 0 20px 60px rgba(138, 0, 203, 0.12);
+        }
+        .franchise-card.unselected {
+            background-color: #f8f1ff;
+            border: 2px solid transparent;
+        }
+        .franchise-card.unselected:hover {
+            background-color: #ede4ff;
+        }
+
+        /* POS counter states */
+        .counter-row {
+            cursor: pointer;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            margin: -0.75rem -1rem;
+            transition: background 0.2s ease;
+        }
+        .counter-row:hover {
+            background: rgba(255,255,255,0.07);
+        }
+        .counter-row.selected-counter {
+            background: rgba(174, 0, 255, 0.12);
+            box-shadow: inset 0 0 0 1.5px rgba(174,0,255,0.3);
+        }
+
+        /* Modal */
+        #shift-modal-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        #shift-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        #shift-modal-box {
+            transform: translateY(30px) scale(0.96);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #shift-modal-overlay.active #shift-modal-box {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Toast notification */
+        #shift-toast {
+            transform: translateX(calc(100% + 2rem));
+            opacity: 0;
+            transition: transform 0.38s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.25s ease;
+            pointer-events: none;
+        }
+        #shift-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Icon transition in franchise card */
+        .franchise-icon-default { display: flex; }
+        .franchise-icon-check { display: none; }
+        .franchise-card.selected .franchise-icon-default { display: none; }
+        .franchise-card.selected .franchise-icon-check { display: flex; }
+
+        /* Toast pulse ring */
+        @keyframes toast-pulse {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50%       { opacity: 0; transform: scale(1.45); }
+        }
+    </style>
+</head>
+
+<body class="bg-background font-body text-on-background min-h-screen overflow-x-hidden">
+    <!-- TopNavBar (Shared Component) -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-[#fdf7ff] dark:bg-[#1f1144] opacity-80 backdrop-blur-2xl flex justify-between items-center px-8 h-20 w-full shadow-xl shadow-[#1f1144]/5">
+        <div class="flex items-center gap-6">
+            <img src="./assets/Smartfran-Cloud-logo-light.svg" alt="SmartFran Cloud Logo" class="w-32 h-20">
+            <div class="h-8 w-[1px] bg-outline-variant/30 hidden md:block"></div>
+            <div class="hidden md:flex flex-col">
+                <span class="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Matias Lombardi</span>
+                <span class="text-sm font-medium text-primary">Lunes, 24 May 2026 • 09:42 AM</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button
+                class="p-3 rounded-full hover:bg-[#ae00ff]/10 transition-colors duration-300 scale-95 active:scale-90 transition-transform">
+                <span class="material-symbols-outlined text-on-surface">notifications</span>
+            </button>
+            <button
+                class="p-3 rounded-full hover:bg-[#ae00ff]/10 transition-colors duration-300 scale-95 active:scale-90 transition-transform">
+                <span class="material-symbols-outlined text-on-surface">settings</span>
+            </button>
+            <div class="flex items-center gap-3 pl-4 border-l border-outline-variant/20">
+                <div class="w-10 h-10 rounded-full bg-secondary-fixed overflow-hidden">
+                    <img alt="User profile avatar" class="w-full h-full object-cover"
+                        data-alt="Professional portrait of a man in a modern office setting with soft natural lighting and blurred background"
+                        src="./assets/images/perfil-user.png" />
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Canvas (Centered) -->
+    <main class="pt-20 pb-32 min-h-screen bg-background flex justify-center">
+        <div class="p-4 md:p-10 w-full max-w-7xl">
+            <!-- Welcome Header -->
+            <div class="mb-12 text-center md:text-left">
+                <h2 class="text-4xl md:text-5xl font-extrabold font-headline text-on-background tracking-tight mb-2">
+                    Bienvenido de nuevo,<strong class="text-primary"> Matias</strong></h2>
+                <p class="text-on-surface-variant text-lg font-medium">Selecciona una franquicia para iniciar tu sesión.
+                </p>
+            </div>
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-12 gap-8">
+                <!-- Left Column: Franchise Selection -->
+                <div class="col-span-12 lg:col-span-7 space-y-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold font-headline flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">storefront</span>
+                            Franquicias Disponibles
+                        </h3>
+                        <span
+                            class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full text-xs font-bold">
+                            3 Disponibles
+                        </span>
+                    </div>
+                    <!-- FRANCHISE 1 -->
+                    <div id="franchise-1" class="franchise-card selected rounded-lg p-8 shadow-2xl shadow-primary/10"
+                        data-franchise="1" onclick="selectFranchise(1)">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-5">
+                                <!-- Icon default -->
+                                <div class="franchise-icon-default w-16 h-16 rounded-full bg-[#f3eaff] items-center justify-center text-[#4f4255] shadow-lg transition-colors">
+                                    <span class="material-symbols-outlined text-4xl">store</span>
+                                </div>
+                                <!-- Icon selected (check) -->
+                                <div class="franchise-icon-check w-16 h-16 rounded-full bg-[#ae00ff] items-center justify-center text-white shadow-lg">
+                                    <span class="material-symbols-outlined text-4xl">check_circle</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-2xl font-extrabold text-[#1f1144]">SMARTFRANCLOUD CAPITAL - CBA</h4>
+                                    <p class="text-[#4f4255] text-base flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">location_on</span>
+                                        Av. Colón 632, Córdoba Capital
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="bg-[#006267]/10 text-[#006267] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter mb-2">Conectado</span>
+                                <span class="text-[10px] font-bold text-[#4f4255]/50">ID: SF-00129</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FRANCHISE 2 -->
+                    <div id="franchise-2" class="franchise-card unselected rounded-lg p-8"
+                        data-franchise="2" onclick="selectFranchise(2)">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-5">
+                                <div class="franchise-icon-default w-16 h-16 rounded-full bg-[#e8ddff] items-center justify-center text-[#4f4255] transition-colors group-hover:bg-[#f5d9ff]">
+                                    <span class="material-symbols-outlined text-4xl">store</span>
+                                </div>
+                                <div class="franchise-icon-check w-16 h-16 rounded-full bg-[#ae00ff] items-center justify-center text-white shadow-lg">
+                                    <span class="material-symbols-outlined text-4xl">check_circle</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-[#1f1144]">SMARTFRANCLOUD - RIO CUARTO</h4>
+                                    <p class="text-[#4f4255] text-base flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">location_on</span>
+                                        Calle Florida 450, Microcentro
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="bg-[#d3c0d8]/20 text-[#4f4255] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Inactiva</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FRANCHISE 3 -->
+                    <div id="franchise-3" class="franchise-card unselected rounded-lg p-8"
+                        data-franchise="3" onclick="selectFranchise(3)">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-5">
+                                <div class="franchise-icon-default w-16 h-16 rounded-full bg-[#e8ddff] items-center justify-center text-[#4f4255] transition-colors">
+                                    <span class="material-symbols-outlined text-4xl">store</span>
+                                </div>
+                                <div class="franchise-icon-check w-16 h-16 rounded-full bg-[#ae00ff] items-center justify-center text-white shadow-lg">
+                                    <span class="material-symbols-outlined text-4xl">check_circle</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-[#1f1144]">SMARTFRANCLOUD - BUENOS AIRES</h4>
+                                    <p class="text-[#4f4255] text-base flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">location_on</span>
+                                        Paseo Alcorta, 1er Piso
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="bg-[#d3c0d8]/20 text-[#4f4255] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Inactiva</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<div class="col-span-12 lg:col-span-5 space-y-8">
+                    <div class="bg-[#0f0035] text-white p-10 rounded-xl shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-[#8a00cb]/20 rounded-full blur-3xl"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-[#f5d9ff] mb-6">
+                                Detalles del punto de venta
+                            </h3>
+                            <div class="space-y-2" id="counters-list">
+                                <!-- Counters rendered by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Card -->
+                    <div class="bg-[#f3eaff] p-8 rounded-lg border border-[#d3c0d8]/10">
+                        <div class="flex items-center gap-4 mb-6">
+                            <span class="material-symbols-outlined text-4xl text-primary p-3 bg-white rounded-full">verified_user</span>
+                            <div>
+                                <h5 class="text-lg font-bold">Sesión autorizada</h5>
+                                <p class="text-sm text-[#4f4255]">Sesión activa durante las próximas 8 horas</p>
+                            </div>
+                        </div>
+                        <a href="./carga-inicial.html" class="w-full bg-[#0f0035] text-white py-4 rounded-full font-bold flex items-center justify-center gap-3 active:scale-95 transition-transform hover:bg-[#1a0050]">
+                            Ingresar a la Terminal
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== BOTTOM BAR ===== -->
+    <div class="fixed bottom-0 left-0 right-0 glass-header h-24 flex items-center justify-center z-30 shadow-[0_-10px_40px_rgba(31,17,68,0.05)]">
+        <div class="max-w-7xl w-full flex items-center justify-between px-10">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-[#006267]"></span>
+                    <span class="font-bold text-sm">Versión actual: <span class="text-primary font-bold">2.18.00</span></span>
+                </div>
+                <div class="h-6 w-[1px] bg-[#d3c0d8]/30 hidden md:block"></div>
+                <div class="hidden md:block text-sm font-medium">Cloud Sync: <span class="text-primary font-bold">2 minutos atrás</span></div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="px-8 py-3 rounded-full border-2 border-[#d3c0d8] text-[#1f1144] font-bold hover:bg-[#e8ddff] transition-colors active:scale-95">
+                    Ver Informes
+                </button>
+                <button class="px-8 py-3 rounded-full font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all text-white signature-gradient">
+                    Gestionar Franquicias
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: OPEN SHIFT ===== -->
+    <div id="shift-modal-overlay" class="fixed inset-0 z-50 flex items-center justify-center"
+        style="background: rgba(15,0,53,0.55); backdrop-filter: blur(8px);">
+        <div id="shift-modal-box" class="bg-[#fdf7ff] rounded-xl shadow-2xl p-10 max-w-md w-full mx-4 relative">
+            <!-- Decorative blob -->
+            <div class="absolute -top-6 -right-6 w-28 h-28 rounded-full blur-2xl opacity-30" style="background: linear-gradient(135deg, #8a00cb, #ae00ff);"></div>
+
+            <div class="flex items-center gap-4 mb-6 relative z-10">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center signature-gradient shadow-lg">
+                    <span class="material-symbols-outlined text-white text-3xl">point_of_sale</span>
+                </div>
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-[#4f4255] font-bold mb-1">Apertura de Turno</p>
+                    <h3 class="text-2xl font-extrabold font-headline text-[#1f1144]" id="modal-counter-name">Mostrador 002</h3>
+                </div>
+            </div>
+
+            <p class="text-[#4f4255] mb-8 relative z-10 leading-relaxed">
+                Este mostrador tiene el turno <strong class="text-[#ba1a1a]">cerrado</strong>. 
+                ¿Deseas aperturar un nuevo turno en <strong id="modal-counter-name-inline" class="text-[#1f1144]">Mostrador 002</strong>?
+            </p>
+
+            <div class="flex gap-4 relative z-10">
+                <button onclick="closeModal()"
+                    class="flex-1 py-4 rounded-full border-2 border-[#d3c0d8] text-[#1f1144] font-bold hover:bg-[#f3eaff] transition-colors active:scale-95">
+                    Cancelar
+                </button>
+                <button onclick="openShift()"
+                    class="flex-1 py-4 rounded-full signature-gradient text-white font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-xl">play_circle</span>
+                    Aperturar Turno
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div id="shift-toast" class="fixed z-[60]"
+        style="bottom: 7rem; right: 2rem; width: 360px; border-radius: 1.25rem; overflow: hidden;
+               background: rgba(253,247,255,0.97); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+               box-shadow: 0 12px 48px -4px rgba(31,17,68,0.18), 0 0 0 1.5px rgba(174,0,255,0.15);
+               display: flex; flex-direction: row;">
+        <!-- Left accent border (12px, gradient via pseudo via solid workaround) -->
+        <div style="width: 12px; flex-shrink: 0; background: linear-gradient(180deg, #8a00cb 0%, #ae00ff 100%); border-radius: 1.25rem 0 0 1.25rem;"></div>
+        <!-- Content -->
+        <div style="flex: 1; overflow: hidden;">
+            <div style="padding: 1rem 1.125rem; display: flex; align-items: center; gap: .875rem;">
+                <!-- Icon with pulse ring -->
+                <div style="position: relative; flex-shrink: 0;">
+                    <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: linear-gradient(135deg,#8a00cb,#ae00ff); display: flex; align-items: center; justify-content: center;">
+                        <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem; font-variation-settings:'FILL' 1;">point_of_sale</span>
+                    </div>
+                    <span style="position:absolute; inset:-3px; border-radius:50%; border:2px solid #ae00ff; animation:toast-pulse 1.6s ease infinite; pointer-events:none;"></span>
+                </div>
+                <div style="flex: 1; min-width: 0;">
+                    <p style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:900; font-size:.8rem; color:#1f1144; margin:0;" id="toast-title">Turno aperturado exitosamente</p>
+                    <p style="font-size:.7rem; font-weight:600; color:#4f4255; margin:.15rem 0 0; font-family:'Manrope',sans-serif;" id="toast-subtitle">Mostrador 002 • Turno abierto ahora</p>
+                </div>
+                <button onclick="closeToast()"
+                    style="width:1.75rem; height:1.75rem; border-radius:50%; background:#f3eaff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#4f4255; flex-shrink:0; transition:background .15s;"
+                    onmouseover="this.style.background='#e6b4ff'" onmouseout="this.style.background='#f3eaff'">
+                    <span class="material-symbols-outlined" style="font-size:.9rem;">close</span>
+                </button>
+            </div>
+            <!-- Progress bar -->
+            <div style="height:2px; background:rgba(31,17,68,0.06);">
+                <div id="toast-progress" style="height:100%; background:linear-gradient(90deg,#8a00cb,#ae00ff); width:100%; transition:width 4500ms linear;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ─── PER-FRANCHISE COUNTER DATA ─────────────────────────────────────────
+        const franchiseCounters = {
+            1: [
+                { id: 'f1-001', name: 'Mostrador 001', desc: 'Terminal principal',  open: true,  since: '08:00 AM' },
+                { id: 'f1-002', name: 'Mostrador 002', desc: 'Terminal PedidosYa',  open: false, since: null },
+                { id: 'f1-003', name: 'Mostrador 003', desc: 'Autoservicio',        open: false, since: null },
+            ],
+            2: [
+                { id: 'f2-001', name: 'Mostrador 001', desc: 'Caja principal',      open: true,  since: '07:30 AM' },
+                { id: 'f2-002', name: 'Mostrador 002', desc: 'Caja express',        open: true,  since: '09:15 AM' },
+                { id: 'f2-003', name: 'Mostrador 003', desc: 'Terminal Rappi',      open: false, since: null },
+                { id: 'f2-004', name: 'Mostrador 004', desc: 'Caja back-office',    open: false, since: null },
+            ],
+            3: [
+                { id: 'f3-001', name: 'Mostrador 001', desc: 'Barra central',       open: true,  since: '10:00 AM' },
+                { id: 'f3-002', name: 'Mostrador 002', desc: 'Barra secundaria',    open: false, since: null },
+            ],
+        };
+
+        // ─── STATE ──────────────────────────────────────────────────────────────
+        let selectedFranchise = 1;
+        let selectedCounter = null;
+        let pendingCounter = null;
+        // Track runtime-opened counters per session
+        const runtimeOpen = new Set();
+
+        // ─── RENDER COUNTERS ────────────────────────────────────────────────────
+        function renderCounters(franchiseId) {
+            const list = document.getElementById('counters-list');
+            const counters = franchiseCounters[franchiseId];
+            list.innerHTML = '';
+            selectedCounter = null;
+
+            counters.forEach((c, idx) => {
+                const isOpen = c.open || runtimeOpen.has(c.id);
+
+                // separator
+                if (idx > 0) {
+                    const sep = document.createElement('div');
+                    sep.className = 'h-[1px] bg-white/10 my-1';
+                    list.appendChild(sep);
+                }
+
+                const row = document.createElement('div');
+                row.className = 'counter-row';
+                row.id = 'counter-' + c.id;
+                row.dataset.open = isOpen ? 'true' : 'false';
+                row.dataset.name = c.name;
+                row.dataset.desc = c.desc;
+                row.dataset.franchiseId = franchiseId;
+                row.onclick = () => selectCounter(c.id, isOpen);
+
+                if (isOpen) {
+                    row.innerHTML = openCounterHTML(c.name, c.desc, c.since || 'ahora');
+                } else {
+                    row.innerHTML = closedCounterHTML(c.name, c.desc);
+                }
+
+                list.appendChild(row);
+            });
+        }
+
+        function openCounterHTML(name, desc, since) {
+            return `<div class="flex items-center justify-between py-2">
+                <div>
+                    <h4 class="text-2xl font-extrabold font-headline">${name}</h4>
+                    <p class="text-[#e8ddff]/60 text-sm">${desc}</p>
+                </div>
+                <div class="text-right">
+                    <div class="flex items-center gap-2 justify-end mb-1">
+                        <span class="w-2 h-2 rounded-full bg-[#6bf6ff]"></span>
+                        <span class="text-[#6bf6ff] font-bold text-sm">Abierto</span>
+                    </div>
+                    <p class="text-[10px] text-[#e8ddff]/40 font-mono uppercase">Desde ${since}</p>
+                </div>
+            </div>`;
+        }
+
+        function closedCounterHTML(name, desc) {
+            return `<div class="flex items-center justify-between py-2">
+                <div>
+                    <h4 class="text-2xl font-extrabold font-headline opacity-60">${name}</h4>
+                    <p class="text-[#e8ddff]/60 text-sm">${desc}</p>
+                </div>
+                <div class="text-right">
+                    <div class="flex items-center gap-2 justify-end mb-1">
+                        <span class="w-2 h-2 rounded-full bg-[#ba1a1a]"></span>
+                        <span class="text-[#ffdad6] font-bold text-sm">Cerrado</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-[#f5d9ff] uppercase tracking-widest bg-[#8a00cb]/20 px-3 py-1 rounded-full">
+                        Abrir Turno
+                    </span>
+                </div>
+            </div>`;
+        }
+
+        // ─── FRANCHISE SELECTION ────────────────────────────────────────────────
+        function selectFranchise(id) {
+            [1, 2, 3].forEach(n => {
+                const card = document.getElementById('franchise-' + n);
+                card.classList.remove('selected');
+                card.classList.add('unselected');
+            });
+            const chosen = document.getElementById('franchise-' + id);
+            chosen.classList.remove('unselected');
+            chosen.classList.add('selected');
+            selectedFranchise = id;
+            renderCounters(id);
+        }
+
+        // ─── COUNTER SELECTION ──────────────────────────────────────────────────
+        function selectCounter(id, isOpen) {
+            const currentOpen = isOpen || runtimeOpen.has(id);
+            if (currentOpen) {
+                clearCounterSelections();
+                selectedCounter = id;
+                document.getElementById('counter-' + id).classList.add('selected-counter');
+            } else {
+                pendingCounter = id;
+                const row = document.getElementById('counter-' + id);
+                document.getElementById('modal-counter-name').textContent = row.dataset.name;
+                document.getElementById('modal-counter-name-inline').textContent = row.dataset.name;
+                openModal();
+            }
+        }
+
+        function clearCounterSelections() {
+            document.querySelectorAll('.counter-row').forEach(r => r.classList.remove('selected-counter'));
+        }
+
+        // ─── MODAL ──────────────────────────────────────────────────────────────
+        function openModal() {
+            document.getElementById('shift-modal-overlay').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('shift-modal-overlay').classList.remove('active');
+            pendingCounter = null;
+        }
+
+        function openShift() {
+            if (!pendingCounter) return;
+            const id = pendingCounter;
+            const row = document.getElementById('counter-' + id);
+            const name = row.dataset.name;
+            const desc = row.dataset.desc;
+
+            runtimeOpen.add(id);
+            row.dataset.open = 'true';
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: true });
+            row.innerHTML = openCounterHTML(name, desc, timeStr);
+            row.onclick = () => selectCounter(id, true);
+
+            clearCounterSelections();
+            selectedCounter = id;
+            row.classList.add('selected-counter');
+
+            closeModal();
+            showToast(name);
+        }
+
+        // ─── TOAST ──────────────────────────────────────────────────────────────
+        let toastTimer = null;
+
+        function showToast(counterName) {
+            document.getElementById('toast-title').textContent = 'Turno aperturado exitosamente';
+            document.getElementById('toast-subtitle').textContent = `${counterName} • Turno abierto ahora`;
+
+            const toast = document.getElementById('shift-toast');
+            // Reset progress bar
+            const bar = document.getElementById('toast-progress');
+            bar.style.transition = 'none';
+            bar.style.width = '100%';
+
+            toast.classList.add('show');
+
+            // Start shrink after next frame
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                bar.style.transition = 'width 4500ms linear';
+                bar.style.width = '0%';
+            }));
+
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 4500);
+        }
+
+        function closeToast() {
+            document.getElementById('shift-toast').classList.remove('show');
+            if (toastTimer) clearTimeout(toastTimer);
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('shift-modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ─── INIT ────────────────────────────────────────────────────────────────
+        renderCounters(1);
+    </script>
+</body>
+</html>

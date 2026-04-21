@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Confirmación de Envío - Luminous Ledger</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed-variant": "#004f53",
+            "outline": "#817287",
+            "on-secondary-fixed-variant": "#4b3e73",
+            "outline-variant": "#d3c0d8",
+            "secondary-container": "#d0c0fe",
+            "primary-fixed-dim": "#e6b4ff",
+            "error": "#ba1a1a",
+            "surface": "#fdf7ff",
+            "inverse-primary": "#e6b4ff",
+            "surface-dim": "#e0d4ff",
+            "on-surface": "#1f1144",
+            "on-tertiary-fixed": "#002022",
+            "tertiary": "#006267",
+            "background": "#fdf7ff",
+            "on-secondary-container": "#594c81",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#fef1ff",
+            "error-container": "#ffdad6",
+            "secondary-fixed-dim": "#cebefb",
+            "on-primary": "#ffffff",
+            "surface-container": "#f3eaff",
+            "primary": "#8a00cb",
+            "inverse-surface": "#35285b",
+            "surface-tint": "#9300d9",
+            "surface-variant": "#e8ddff",
+            "tertiary-container": "#007d83",
+            "inverse-on-surface": "#f5eeff",
+            "primary-fixed": "#f5d9ff",
+            "secondary": "#63568c",
+            "tertiary-fixed-dim": "#40dae3",
+            "primary-container": "#ae00ff",
+            "on-surface-variant": "#4f4255",
+            "on-primary-fixed-variant": "#7000a6",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f8f1ff",
+            "surface-container-high": "#ede4ff",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed": "#1f1144",
+            "on-primary-fixed": "#30004a",
+            "surface-bright": "#fdf7ff",
+            "on-background": "#1f1144",
+            "secondary-fixed": "#e8ddff",
+            "surface-container-highest": "#e8ddff",
+            "tertiary-fixed": "#6bf6ff",
+            "on-error": "#ffffff",
+            "on-tertiary-container": "#d8fdff"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Manrope"],
+            "label": ["Manrope"]
+          },
+          borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .bg-mesh {
+      background-color: #fdf7ff;
+      background-image:
+        radial-gradient(at 0% 0%, hsla(274, 100%, 90%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(281, 100%, 85%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(262, 100%, 92%, 1) 0, transparent 50%);
+    }
+
+    .glass-card {
+      background: rgba(253, 247, 255, 0.7);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+    }
+  </style>
+</head>
+
+<body class="font-body text-on-background bg-mesh min-h-screen flex flex-col">
+  <!-- Main Content: Transactional Success State -->
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
+    <div class="max-w-xl w-full">
+      <!-- Success Card -->
+      <div
+        class="glass-card rounded-xl p-8 md:p-12 text-center shadow-2xl relative overflow-hidden border border-white/40">
+        <!-- Decorative Light Pulse -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary-container/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-tertiary/10 rounded-full blur-3xl"></div>
+        <!-- Icon Section -->
+        <div class="mb-8 flex justify-center">
+          <div
+            class="w-24 h-24 bg-primary-container/10 rounded-full flex items-center justify-center ring-8 ring-primary-container/5">
+            <span class="material-symbols-outlined text-6xl text-primary-container"
+              style="font-variation-settings: 'FILL' 1;">
+              check_circle
+            </span>
+          </div>
+        </div>
+        <!-- Text Content -->
+        <h1 class="font-headline text-4xl font-extrabold tracking-tight text-on-background mb-4">
+          ¡Correo enviado!
+        </h1>
+        <p class="text-on-surface-variant text-lg leading-relaxed mb-10 max-w-sm mx-auto">
+          Si el correo ingresado coincide con una cuenta activa, recibirás un enlace de recuperación en unos minutos.
+        </p>
+        <!-- Primary Action -->
+        <div class="space-y-6">
+          <a
+            class="w-full bg-gradient-to-br from-primary to-primary-container text-white font-bold py-4 px-8 rounded-full shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2"
+            href="./login.html">
+            Entendido, volver al Login
+            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+          </a>
+          <!-- Secondary Link -->
+          <div class="pt-4">
+            <a class="text-primary font-semibold hover:text-primary-container transition-colors flex items-center justify-center gap-2 group"
+              href="#">
+              Contact System Admin
+              <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1"
+                data-icon="open_in_new">open_in_new</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Footer -->
+  <footer class="w-full py-8 flex flex-col items-center gap-4 w-full max-w-7xl mx-auto">
+    <div class="flex flex-wrap justify-center gap-6">
+      <a class="font-manrope text-xs uppercase tracking-widest text-on-background/40 hover:text-on-background transition-colors duration-300"
+        href="#">Support</a>
+      <a class="font-manrope text-xs uppercase tracking-widest text-on-background/40 hover:text-on-background transition-colors duration-300"
+        href="#">Security Policy</a>
+      <a class="font-manrope text-xs uppercase tracking-widest text-on-background/40 hover:text-on-background transition-colors duration-300"
+        href="#">Privacy</a>
+      <a class="font-manrope text-xs uppercase tracking-widest text-on-background/40 hover:text-on-background transition-colors duration-300"
+        href="#">Terms</a>
+    </div>
+    <p class="font-manrope text-xs uppercase tracking-widest text-on-background/40 text-center px-4">
+      © 2026 SmartFran Cloud. All rights reserved.
+    </p>
+  </footer>
+</body>
+
+</html>
