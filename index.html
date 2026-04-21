@@ -231,6 +231,211 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
   .migration .promise p{font-family:var(--display);font-size:22px;line-height:1.35;font-weight:500;letter-spacing:-.01em}
   .migration .promise p strong{color:var(--accent2);font-weight:700}
 
+  /* INFRA MANIFESTO BAND */
+  .infra-band{background:var(--bg);padding:70px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .infra-band::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 15% 50%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 45%),
+    radial-gradient(circle at 85% 50%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 40%);
+    pointer-events:none;opacity:.7}
+  .infra-band .row{display:grid;grid-template-columns:auto 1fr auto;gap:48px;align-items:center;position:relative;z-index:2}
+  .infra-band .big-icon{width:96px;height:96px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:color-mix(in oklab, var(--accent2) 15%, var(--surface));border:1px solid var(--accent2);color:var(--accent2);flex-shrink:0}
+  .infra-band .msg{display:flex;flex-direction:column;gap:8px}
+  .infra-band .msg .tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:500}
+  .infra-band .msg h3{font-family:var(--display);font-size:clamp(26px,3.3vw,40px);line-height:1.15;font-weight:700;letter-spacing:-.02em;max-width:36ch}
+  .infra-band .msg h3 .accent{color:var(--accent2)}
+  .infra-band .msg h3 .thin{font-weight:300;color:var(--muted)}
+  .infra-band .steps-inline{display:flex;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);align-items:center;flex-wrap:wrap;margin-top:4px}
+  .infra-band .steps-inline .sep{color:var(--accent2)}
+  .infra-band .steps-inline strong{color:var(--ink);font-weight:500}
+  .infra-band .kill{display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--muted);border-left:1px solid var(--line);padding-left:32px;min-width:240px}
+  .infra-band .kill .k{display:flex;align-items:center;gap:10px}
+  .infra-band .kill .k::before{content:"✕";color:#e3506a;font-weight:700;font-size:16px;width:16px}
+  .infra-band .kill .k strong{color:var(--ink);font-weight:600}
+  @media (max-width:960px){
+    .infra-band .row{grid-template-columns:1fr;gap:24px}
+    .infra-band .kill{border-left:none;border-top:1px solid var(--line);padding:24px 0 0}
+    .infra-band .big-icon{width:64px;height:64px}
+  }
+
+  /* BI STRATEGIC — new version */
+  .bi-strat{background:var(--surface);border-top:1px solid var(--line);position:relative;overflow:hidden}
+  .bi-strat::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle, color-mix(in oklab, var(--accent2) 15%, transparent), transparent 60%);pointer-events:none}
+  .bi-strat .sec-head{position:relative;z-index:2}
+  .bi-strat h2 .role-flip{display:inline-block;position:relative}
+  .bi-strat h2 .role-flip .from{color:var(--muted);font-weight:300;position:relative}
+  .bi-strat h2 .role-flip .from::after{content:"";position:absolute;left:-4%;right:-4%;top:55%;height:5px;background:color-mix(in oklab, var(--muted) 50%, transparent);transform:rotate(-2deg)}
+
+  /* Top banner: role shift */
+  .role-shift{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;padding:32px 40px;border:1px solid var(--line);border-radius:22px;background:var(--bg);margin-bottom:48px}
+  .role-shift .side{display:flex;flex-direction:column;gap:8px}
+  .role-shift .side .k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .role-shift .side h4{font-family:var(--display);font-size:22px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
+  .role-shift .side.before h4{color:var(--muted);font-weight:400}
+  .role-shift .side.after h4 .accent{color:var(--accent2)}
+  .role-shift .side .desc{font-size:13px;color:var(--muted);line-height:1.5}
+  .role-shift .arrow-big{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--accent2)}
+  .role-shift .arrow-big .chev{font-size:32px;font-weight:300;line-height:1}
+  .role-shift .arrow-big .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+  @media (max-width:760px){
+    .role-shift{grid-template-columns:1fr;padding:24px;text-align:left}
+    .role-shift .arrow-big{flex-direction:row;gap:10px}
+    .role-shift .arrow-big .chev{transform:rotate(90deg)}
+  }
+
+  /* Dashboard mock */
+  .bi-dashboard{position:relative;z-index:2;background:#F6F4EF;color:#1a1530;border-radius:24px;padding:28px 28px 24px;box-shadow:0 32px 80px rgba(0,0,0,.45), 0 0 0 1px color-mix(in oklab, var(--accent2) 30%, transparent);margin-bottom:32px;position:relative}
+  .bi-dashboard::before{content:"Power BI · Live";position:absolute;top:-11px;right:32px;font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:var(--accent2);color:#0F0035;padding:4px 12px;border-radius:20px;font-weight:700}
+  .bi-dashboard .dash-head{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #e5dbc9}
+  .bi-dashboard .dash-head h4{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.1;color:#1a1530}
+  .bi-dashboard .dash-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#7a6e8c;text-transform:uppercase;display:flex;gap:12px;align-items:center}
+  .bi-dashboard .dash-head .meta .live-pulse{width:7px;height:7px;border-radius:50%;background:#2cce6e;animation:beat 1.5s infinite}
+  .bi-dashboard .filters{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+  .bi-dashboard .filters .chip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;border:1px solid #d4c8b8;color:#4a3b6e;cursor:pointer;transition:all .15s;background:#fff}
+  .bi-dashboard .filters .chip.active{background:#1a1530;color:#F6F4EF;border-color:#1a1530}
+  .bi-dashboard .filters .chip:hover{border-color:#1a1530}
+  .bi-dashboard .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .bi-dashboard .kpi{padding:16px 18px;background:#fff;border-radius:14px;border:1px solid #e5dbc9;display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden;transition:transform .2s, box-shadow .2s}
+  .bi-dashboard .kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,21,48,.08)}
+  .bi-dashboard .kpi .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#7a6e8c}
+  .bi-dashboard .kpi .v{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:-.02em;color:#1a1530;line-height:1}
+  .bi-dashboard .kpi .v .unit{font-size:13px;color:#7a6e8c;font-weight:500;margin-left:2px}
+  .bi-dashboard .kpi .delta{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em}
+  .bi-dashboard .kpi .delta.up{color:#2a8a50}
+  .bi-dashboard .kpi .delta.dn{color:#c0335d}
+  .bi-dashboard .kpi .spark{position:absolute;right:12px;bottom:10px;opacity:.5}
+  .bi-dashboard .charts{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+  .bi-dashboard .card-mini{padding:16px;background:#fff;border-radius:14px;border:1px solid #e5dbc9}
+  .bi-dashboard .card-mini .t{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#7a6e8c;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+  .bi-dashboard .card-mini .t .drill{color:#6300FF;font-weight:600;cursor:pointer}
+  .bi-dashboard .card-mini svg{width:100%;height:auto}
+  .bi-dashboard .ranking{display:flex;flex-direction:column;gap:6px}
+  .bi-dashboard .ranking .r{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;font-size:12px;padding:4px 0}
+  .bi-dashboard .ranking .r .rk{font-family:var(--mono);color:#7a6e8c;font-size:10px}
+  .bi-dashboard .ranking .r .nm{color:#1a1530;font-weight:500;position:relative;padding-left:8px}
+  .bi-dashboard .ranking .r .nm::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:2px;background:var(--sw,#9E8FE8)}
+  .bi-dashboard .ranking .r .nm small{color:#7a6e8c;font-weight:400;margin-left:6px}
+  .bi-dashboard .ranking .r .bar{width:90px;height:6px;background:#f0e9da;border-radius:3px;overflow:hidden;position:relative}
+  .bi-dashboard .ranking .r .bar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,50%);background:var(--sw,#9E8FE8);border-radius:3px}
+  @media (max-width:880px){
+    .bi-dashboard .kpis{grid-template-columns:1fr 1fr}
+    .bi-dashboard .charts{grid-template-columns:1fr}
+  }
+
+  /* Decision ladder below */
+  .bi-use{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .bi-use .box{padding:24px 22px;background:var(--bg);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;gap:10px}
+  .bi-use .box .num{font-family:var(--display);font-size:34px;font-weight:800;color:var(--accent2);line-height:1;letter-spacing:-.02em}
+  .bi-use .box h4{font-family:var(--display);font-size:16px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+  .bi-use .box p{font-size:13px;color:var(--muted);line-height:1.5}
+  .bi-use .box p strong{color:var(--ink);font-weight:600}
+  @media (max-width:960px){
+    .bi-use{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:560px){
+    .bi-use{grid-template-columns:1fr}
+  }
+
+  /* ROADMAP */
+  .roadmap{background:var(--bg)}
+  .roadmap .tracks{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .roadmap .track{padding:32px;border:1px solid var(--line);border-radius:22px;background:var(--surface);position:relative;overflow:hidden}
+  .roadmap .track.innovation{background:linear-gradient(135deg, color-mix(in oklab, var(--accent) 22%, var(--surface)) 0%, var(--surface) 70%);border-color:color-mix(in oklab, var(--accent) 40%, var(--line))}
+  .roadmap .track .track-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:20px}
+  .roadmap .track .track-head h3{font-family:var(--display);font-size:28px;line-height:1.1;font-weight:700;letter-spacing:-.02em}
+  .roadmap .track .track-head h3 .accent{color:var(--accent2)}
+  .roadmap .track .track-head h3 .accent-v{color:var(--accent);background:linear-gradient(90deg, #a275ff, var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .roadmap .track .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px}
+  .roadmap .track.innovation .kicker{color:#c79dff}
+  .roadmap .track .pill{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;border-radius:20px;background:var(--bg);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+  .roadmap .track .pill.live{background:var(--accent2);border-color:var(--accent2);color:#0F0035;font-weight:700}
+  .roadmap .milestones{display:flex;flex-direction:column;gap:14px}
+  .roadmap .ms{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 16px;background:var(--bg);border:1px solid var(--line);border-radius:12px;transition:border-color .2s}
+  .roadmap .ms:hover{border-color:var(--accent2)}
+  .roadmap .ms .q{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--accent2);text-transform:uppercase;font-weight:600}
+  .roadmap .ms .t{font-size:14px;color:var(--ink);font-weight:500;line-height:1.4}
+  .roadmap .ms .t small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}
+  .roadmap .ms .st{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+
+  /* DEMO BAR */
+  .demo-bar{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .demo-launch{display:flex;gap:12px;align-items:center;padding:14px 18px;border-radius:14px;background:var(--bg);border:1px solid var(--line);cursor:pointer;text-align:left;transition:all .2s;width:100%}
+  .demo-launch:hover{border-color:var(--accent2);transform:translateY(-2px)}
+  .demo-launch .ico-wrap{width:38px;height:38px;border-radius:10px;background:color-mix(in oklab, var(--accent) 20%, transparent);display:flex;align-items:center;justify-content:center;color:var(--accent2);flex-shrink:0}
+  .demo-launch .txt{flex:1}
+  .demo-launch .txt .t{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:-.005em}
+  .demo-launch .txt .s{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .demo-launch .arrow{color:var(--accent2);font-weight:700}
+
+  @media (max-width:960px){
+    .roadmap .tracks{grid-template-columns:1fr}
+    .demo-bar{grid-template-columns:1fr}
+  }
+
+  /* DEMO MODAL (chatbot + invoice) */
+  .demo-modal{position:fixed;inset:0;background:rgba(5,0,20,.85);backdrop-filter:blur(10px);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .demo-modal.open{display:flex}
+  .demo-sheet{width:min(680px,100%);max-height:90vh;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .demo-sheet .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line);background:var(--surface2)}
+  .demo-sheet .sheet-head .t{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:16px}
+  .demo-sheet .sheet-head .t .live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);animation:beat 1.5s infinite}
+  .demo-sheet .sheet-head .close{font-size:20px;color:var(--muted);cursor:pointer;background:none;border:none;padding:4px 10px;border-radius:8px}
+  .demo-sheet .sheet-head .close:hover{color:var(--ink);background:var(--line)}
+
+  /* Chatbot */
+  .chat-body{flex:1;display:flex;flex-direction:column;min-height:400px;max-height:60vh}
+  .chat-messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+  .chat-messages::-webkit-scrollbar{width:6px}
+  .chat-messages::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .chat-msg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .chat-msg.user{align-self:flex-end;background:var(--accent);color:var(--ink);border-bottom-right-radius:4px}
+  .chat-msg.bot{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .chat-msg.bot strong{color:var(--accent2)}
+  .chat-msg.typing{display:flex;gap:4px;align-items:center}
+  .chat-msg.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typing 1.2s infinite}
+  .chat-msg.typing span:nth-child(2){animation-delay:.15s}
+  .chat-msg.typing span:nth-child(3){animation-delay:.3s}
+  @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+  .chat-input{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--line);background:var(--bg)}
+  .chat-input input{flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:11px 16px;border-radius:999px;font-family:var(--sans);font-size:14px;outline:none}
+  .chat-input input:focus{border-color:var(--accent2)}
+  .chat-input button{padding:11px 20px;border-radius:999px;background:var(--accent2);color:#0F0035;font-weight:700;font-size:13px;font-family:var(--sans);border:none;cursor:pointer}
+  .chat-input button:disabled{opacity:.5;cursor:not-allowed}
+  .chat-suggestions{display:flex;gap:8px;padding:12px 24px 0;flex-wrap:wrap}
+  .chat-suggestions button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted);cursor:pointer}
+  .chat-suggestions button:hover{border-color:var(--accent2);color:var(--ink)}
+
+  /* Invoice demo */
+  .inv-body{padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;min-height:420px}
+  .inv-drop{border:2px dashed var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;background:var(--bg);position:relative;overflow:hidden}
+  .inv-drop.processing{border-color:var(--accent2);border-style:solid}
+  .inv-drop .title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+  .inv-drop .paper{background:#f8f4ee;color:#2a1b45;border-radius:8px;padding:14px;font-family:"JetBrains Mono", ui-monospace, monospace;font-size:10px;line-height:1.5;position:relative;min-height:220px}
+  .inv-drop .paper h5{font-family:var(--display);font-weight:700;font-size:13px;margin-bottom:6px;color:#2a1b45;display:flex;justify-content:space-between}
+  .inv-drop .paper .meta{color:#6b5a85;margin-bottom:10px;font-size:9px}
+  .inv-drop .paper table{width:100%;border-collapse:collapse;font-size:9px;margin-top:6px}
+  .inv-drop .paper table th{text-align:left;border-bottom:1px solid #c9b9e0;padding:4px 2px;font-weight:700;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+  .inv-drop .paper table td{padding:3px 2px;border-bottom:1px dotted #d9ccec}
+  .inv-drop .paper table td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .inv-drop .paper .tot{text-align:right;margin-top:8px;font-size:11px;font-weight:700}
+  .inv-drop .scan-line{position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, color-mix(in oklab, var(--accent2) 40%, transparent) 50%, transparent 60%);animation:scan-inv 2s linear infinite;pointer-events:none;display:none}
+  .inv-drop.processing .scan-line{display:block}
+  @keyframes scan-inv{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+  .inv-extracted{display:flex;flex-direction:column;gap:10px}
+  .inv-extracted .title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2)}
+  .inv-extracted .field{padding:10px 14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;display:flex;justify-content:space-between;font-size:13px;opacity:0;transform:translateX(20px);transition:all .3s}
+  .inv-extracted .field.in{opacity:1;transform:translateX(0)}
+  .inv-extracted .field .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .inv-extracted .field .v{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:12px}
+  .inv-extracted .field .v.ok::after{content:" ✓";color:var(--accent2)}
+  .inv-extracted .status{margin-top:auto;padding:12px 16px;border-radius:12px;background:color-mix(in oklab, var(--accent2) 18%, transparent);border:1px solid var(--accent2);color:var(--accent2);font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;text-align:center;font-weight:700;opacity:0;transition:opacity .4s}
+  .inv-extracted .status.in{opacity:1}
+  .inv-reset{margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--accent2);cursor:pointer;background:none;border:none;letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:0}
+  .inv-reset:hover{text-decoration:underline}
+
+  @media (max-width:700px){
+    .inv-body{grid-template-columns:1fr}
+  }
+
   /* OBJECTIONS */
   .objections{background:var(--bg)}
   .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
@@ -304,8 +509,9 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       <a href="#legado">15 años</a>
       <a href="#valor">Valor</a>
       <a href="#capacidades">Capacidades</a>
-      <a href="#suite">Suite</a>
+      <a href="#bi">BI</a>
       <a href="#probalo">Probalo</a>
+      <a href="#roadmap">Roadmap + IA</a>
       <a href="#migracion">Migración</a>
     </div>
     <a href="#probalo" class="btn primary"><span class="live-dot"></span>Probá el POS ahora <span class="arrow">→</span></a>
@@ -316,7 +522,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 <header class="hero">
   <div class="wrap" style="position:relative;z-index:2">
     <div class="eyebrow-row">
-      <span class="eyebrow">Smartfran Cloud · Feria Grido 2026</span>
+      <span class="eyebrow">Mismo ADN. Nueva era.</span>
     </div>
     <h1 class="claim">
       <span class="thin">Tu heladería,</span><br/>
@@ -359,10 +565,43 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       </div>
       <div>
         <div class="eyebrow" style="margin-bottom:18px">— Honramos lo construido</div>
-        <h3>Una plataforma no llega a 15 años por casualidad.</h3>
+        <h3>Mismo ADN.<br/><span style="color:var(--accent2)">Nueva era.</span></h3>
+        <p style="margin-top:20px">Una plataforma no llega a 15 años por casualidad.</p>
         <p>Smartfran On&nbsp;Premise acompañó a la red durante <strong>más de una década y media</strong>. Estable, veloz, conocida por todos los equipos de tus heladerías. Un NPS que habla por sí solo.</p>
         <p class="pull">Cloud no reemplaza ese camino: lo capitaliza.</p>
         <p>Tomamos lo que funciona y lo llevamos a otra escala. La <strong>lógica de tu negocio es la misma</strong>. Lo que cambia es el tiempo que te libera, los costos que desaparecen y las ventas que antes se escapaban.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFRA MANIFESTO BAND -->
+<section class="infra-band" id="infra" aria-label="Cero instalaciones">
+  <div class="wrap">
+    <div class="row">
+      <div class="big-icon">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="4" width="18" height="13" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+          <path d="M9 10l2 2 4-4" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="msg">
+        <span class="tag">Infraestructura · Instalación cero</span>
+        <h3><span class="thin">Se terminaron las instalaciones, las reinstalaciones y los técnicos en el local.</span> Abrís el dispositivo, te logueás y <span class="accent">empezás a operar</span>.</h3>
+        <div class="steps-inline">
+          <span><strong>01</strong> Abrís tu dispositivo</span>
+          <span class="sep">→</span>
+          <span><strong>02</strong> Te logueás</span>
+          <span class="sep">→</span>
+          <span><strong>03</strong> Operás</span>
+        </div>
+      </div>
+      <div class="kill">
+        <div class="k"><strong>Setup inicial</strong></div>
+        <div class="k"><strong>Reinstalaciones</strong></div>
+        <div class="k"><strong>Actualizaciones manuales</strong></div>
+        <div class="k"><strong>Soporte para instalar</strong></div>
       </div>
     </div>
   </div>
@@ -552,6 +791,113 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
   </div>
 </section>
 
+<!-- BI · De lo operativo a lo estratégico -->
+<section class="block bi-strat" id="bi">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Inteligencia de negocios</span>
+        <h2>De lo <span class="thin">operativo</span><br/>a lo <span class="accent">estratégico</span>.</h2>
+        <div class="head-swap">
+          <span class="from">Reportes a fin de mes</span>
+          <span class="arrow">→</span>
+          <span class="to">Desvíos día a día</span>
+        </div>
+      </div>
+      <p class="lede">La conducción a ciegas se terminó. <strong>El negocio se mide todos los días</strong>, no el 5 del mes siguiente. Cada caja que das de baja, cada remito que entra desde SAP, cada movimiento en el mostrador alimenta un tablero en vivo que te deja <strong>decidir hoy, no lamentarte mañana</strong>.</p>
+    </div>
+
+    <div class="bi-layout">
+      <!-- CARD 1: SAP integration -->
+      <article class="bi-card bi-sap">
+        <span class="label">Compras · Integración SAP</span>
+        <h3>Los remitos de compra entran <span class="accent">solos</span>.</h3>
+        <p class="sub">La integración directa con SAP trae los <strong>remitos de compra automáticamente</strong> a Smartfran Cloud. Se acabó la doble carga, el tipeo manual y las diferencias de inventario por errores de transcripción.</p>
+        <div class="sap-demo">
+          <div class="box"><div class="logo">SAP</div><div class="line">Remito emitido</div></div>
+          <div class="pipe"><div class="lbl">API</div><div class="dash"></div><div class="lbl">en vivo</div></div>
+          <div class="box to"><div class="logo">CLOUD</div><div class="line">Stock actualizado</div></div>
+        </div>
+        <div class="vs">
+          <div class="col before-col"><div class="t">Antes</div><div class="v">Carga manual, remito por remito. Errores y retrasos.</div></div>
+          <div class="col after-col"><div class="t">Ahora</div><div class="v">Cero intervención. El remito impacta el stock al instante.</div></div>
+        </div>
+      </article>
+
+      <!-- CARD 2: Daily deviation -->
+      <article class="bi-card bi-deviation">
+        <span class="label">Desvío diario · Impulsivos + Helado a granel</span>
+        <h3>El desvío se mide <span class="accent">día a día</span>, no a fin de mes.</h3>
+        <p class="sub">Impulsivos y helado a granel quedan visibles en tiempo real. Si hay un desvío, lo ves el mismo día y lo corregís — no te enterás en el cierre, cuando ya es tarde.</p>
+        <div class="chart">
+          <div class="row-top">
+            <span>Últimos 14 días · Desvío vs. esperado</span>
+            <span class="delta">Alerta D-4</span>
+          </div>
+          <svg viewBox="0 0 400 140" preserveAspectRatio="none" aria-hidden="true">
+            <!-- gridlines -->
+            <g stroke="#2E1880" stroke-width="0.5" opacity="0.4">
+              <line x1="0" y1="35" x2="400" y2="35"/>
+              <line x1="0" y1="70" x2="400" y2="70"/>
+              <line x1="0" y1="105" x2="400" y2="105"/>
+            </g>
+            <!-- baseline (expected) -->
+            <line x1="0" y1="70" x2="400" y2="70" stroke="#9E8FE8" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+            <!-- Impulsivos bars -->
+            <g fill="#F0B034">
+              <rect x="10"  y="55" width="14" height="15"/>
+              <rect x="38"  y="62" width="14" height="8"/>
+              <rect x="66"  y="50" width="14" height="20"/>
+              <rect x="94"  y="60" width="14" height="10"/>
+              <rect x="122" y="65" width="14" height="5"/>
+              <rect x="150" y="58" width="14" height="12"/>
+              <rect x="178" y="52" width="14" height="18"/>
+              <rect x="206" y="70" width="14" height="12" opacity="0.7"/>
+              <rect x="234" y="70" width="14" height="22" opacity="0.7"/>
+              <rect x="262" y="70" width="14" height="30" opacity="0.9"/>
+              <rect x="290" y="70" width="14" height="20" opacity="0.85"/>
+              <rect x="318" y="62" width="14" height="8"/>
+              <rect x="346" y="56" width="14" height="14"/>
+              <rect x="374" y="60" width="14" height="10"/>
+            </g>
+            <!-- Granel line -->
+            <polyline points="17,48 45,54 73,42 101,50 129,46 157,52 185,38 213,62 241,72 269,88 297,70 325,52 353,48 381,50" fill="none" stroke="#2CCED7" stroke-width="2"/>
+            <g fill="#2CCED7">
+              <circle cx="17" cy="48" r="2.5"/><circle cx="45" cy="54" r="2.5"/><circle cx="73" cy="42" r="2.5"/>
+              <circle cx="101" cy="50" r="2.5"/><circle cx="129" cy="46" r="2.5"/><circle cx="157" cy="52" r="2.5"/>
+              <circle cx="185" cy="38" r="2.5"/><circle cx="213" cy="62" r="2.5"/><circle cx="241" cy="72" r="2.5"/>
+              <circle cx="269" cy="88" r="4" fill="#AE00FF"/>
+              <circle cx="297" cy="70" r="2.5"/><circle cx="325" cy="52" r="2.5"/><circle cx="353" cy="48" r="2.5"/><circle cx="381" cy="50" r="2.5"/>
+            </g>
+            <!-- alert annotation -->
+            <line x1="269" y1="88" x2="269" y2="115" stroke="#AE00FF" stroke-width="1" stroke-dasharray="2 2"/>
+            <text x="269" y="128" text-anchor="middle" fill="#AE00FF" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600">DÍA 10 · detectado</text>
+          </svg>
+          <div class="legend">
+            <span><span class="dot a"></span>Impulsivos</span>
+            <span><span class="dot b"></span>Helado a granel</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 3: Box mortality -->
+      <article class="bi-card bi-boxes">
+        <span class="label">Bajas de cajas · Control por sabor</span>
+        <h3>Cada baja de caja es un <span class="accent">dato duro</span>.</h3>
+        <p class="sub">En 10 segundos das de baja la caja vacía — y se vuelve la <strong>huella del consumo real por sabor</strong>. Ves qué sabor se mueve, qué sabor sobra y tomás decisiones de reposición y mix con evidencia.</p>
+        <div class="box-list">
+          <div class="box-row" style="--sw:#7a4a2a"><span class="name">Dulce de Leche Granizado</span><span class="count">38 cajas</span><span class="trend up">↑ 12%</span></div>
+          <div class="box-row" style="--sw:#e7a8c4"><span class="name">Frutilla a la Crema</span><span class="count">24 cajas</span><span class="trend up">↑ 6%</span></div>
+          <div class="box-row" style="--sw:#4a3d2e"><span class="name">Chocolate Suizo</span><span class="count">19 cajas</span><span class="trend up">↑ 3%</span></div>
+          <div class="box-row" style="--sw:#f4e39a"><span class="name">Limón al Champagne</span><span class="count">6 cajas</span><span class="trend dn">↓ 18%</span></div>
+          <div class="box-row" style="--sw:#c7d8ab"><span class="name">Menta Granizada</span><span class="count">4 cajas</span><span class="trend dn">↓ 22%</span></div>
+        </div>
+        <div class="bottom-note">Reposición optimizada · <strong>menos rotura</strong>, menos capital ocioso · mix afinado al público de tu barrio</div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- SUITE (los 3 productos) -->
 <section class="block suite" id="suite">
   <div class="wrap">
@@ -614,6 +960,65 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     </div>
 
     <p class="mono" style="text-align:center;margin-top:28px;color:var(--muted)">También podés escanear el QR del stand y seguir probándolo desde tu celular.</p>
+  </div>
+</section>
+
+<!-- ROADMAP + IA -->
+<section class="block roadmap" id="roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Roadmap · Lo que viene</span>
+        <h2>Cloud es el <span class="thin">punto de partida,</span><br/>no el <span class="accent">final</span>.</h2>
+      </div>
+      <p class="lede">Dos caminos en paralelo. Por un lado, <strong>evolución continua</strong> de la plataforma. Por el otro, una capa de <strong>inteligencia artificial</strong> que ya está en desarrollo — con demos que podés tocar acá mismo.</p>
+    </div>
+
+    <div class="tracks">
+      <div class="track">
+        <div class="track-head">
+          <div>
+            <div class="kicker">Pista 1 · Evolución de plataforma</div>
+            <h3>Más <span class="accent">velocidad, más control</span>.</h3>
+          </div>
+          <span class="pill live">En curso</span>
+        </div>
+        <div class="milestones">
+          <div class="ms"><span class="q">Q1'26</span><span class="t">Catálogo + disponibilidad centralizada multi-plataforma<small>Un click apaga un producto en PedidosYa, Rappi y PediGrido a la vez</small></span><span class="st">build</span></div>
+          <div class="ms"><span class="q">Q2'26</span><span class="t">Valores de referencia por rubro<small>BI sugiere oportunidades comparando tu tienda con el benchmark de la red</small></span><span class="st">design</span></div>
+          <div class="ms"><span class="q">Q3'26</span><span class="t">App móvil nativa para franquiciados<small>Operación, alarmas y resultados al alcance, sin abrir la laptop</small></span><span class="st">scoped</span></div>
+          <div class="ms"><span class="q">Q4'26</span><span class="t">Circuito completo de recetario y mermas<small>Trazabilidad extremo a extremo desde el insumo hasta la venta</small></span><span class="st">explore</span></div>
+        </div>
+      </div>
+
+      <div class="track innovation">
+        <div class="track-head">
+          <div>
+            <div class="kicker">Pista 2 · Innovación con IA</div>
+            <h3>Smartfran con <span class="accent-v">inteligencia artificial</span>.</h3>
+          </div>
+          <span class="pill live">Demo</span>
+        </div>
+        <div class="milestones">
+          <div class="ms"><span class="q">Now</span><span class="t">Asistente conversacional Smartfran<small>Preguntale al negocio: ventas, stock, alertas — en lenguaje natural</small></span><span class="st">demo →</span></div>
+          <div class="ms"><span class="q">Now</span><span class="t">Carga de facturas con IA<small>Subís foto o PDF y los datos entran solos al sistema</small></span><span class="st">demo →</span></div>
+          <div class="ms"><span class="q">Q2'26</span><span class="t">Recomendación de reposición por sabor<small>Sugerencias diarias calibradas con la baja real de cajas</small></span><span class="st">train</span></div>
+          <div class="ms"><span class="q">Q3'26</span><span class="t">Detección automática de desvíos<small>Cierre diario con flags sobre qué pedir revisar — antes de que te duela</small></span><span class="st">explore</span></div>
+        </div>
+        <div class="demo-bar">
+          <button class="demo-launch" data-demo="chatbot">
+            <span class="ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a3 3 0 0 1-3 3H9l-4 4V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3z"/><circle cx="9" cy="11" r="1" fill="currentColor"/><circle cx="13" cy="11" r="1" fill="currentColor"/><circle cx="17" cy="11" r="1" fill="currentColor"/></svg></span>
+            <span class="txt"><span class="t">Chatbot Smartfran</span><span class="s">Probalo ahora</span></span>
+            <span class="arrow">→</span>
+          </button>
+          <button class="demo-launch" data-demo="invoice">
+            <span class="ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v6h6"/><path d="M9 14h6M9 18h4M9 10h2"/></svg></span>
+            <span class="txt"><span class="t">Carga de facturas con IA</span><span class="s">Probalo ahora</span></span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -749,6 +1154,71 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     <div class="impact">
       <span class="lb">Impacto</span>
       <span class="tx" id="m-impact"></span>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO MODALS -->
+<div class="demo-modal" id="demo-chatbot" aria-hidden="true">
+  <div class="demo-sheet">
+    <div class="sheet-head">
+      <div class="t"><span class="live-dot"></span>Asistente Smartfran · Demo</div>
+      <button class="close" data-close-demo>✕</button>
+    </div>
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button data-q="¿Cómo van las ventas de hoy comparadas con ayer?">Ventas de hoy vs. ayer</button>
+      <button data-q="¿Qué sabor de helado se está moviendo más esta semana?">Sabor top de la semana</button>
+      <button data-q="¿Tengo algún desvío de stock que deba revisar hoy?">Desvíos de stock hoy</button>
+      <button data-q="¿Cuánto efectivo hay ahora en los cajones de la heladería?">Efectivo en cajones</button>
+    </div>
+    <div class="chat-body">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg bot">Soy el asistente de <strong>Smartfran Cloud</strong>. Preguntame por ventas, stock, desvíos o Club Grido — respondo como si tuviera tu negocio en la mano.</div>
+      </div>
+      <form class="chat-input" id="chat-form">
+        <input id="chat-text" placeholder="Escribí tu pregunta…" autocomplete="off" />
+        <button type="submit" id="chat-send">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="demo-modal" id="demo-invoice" aria-hidden="true">
+  <div class="demo-sheet">
+    <div class="sheet-head">
+      <div class="t"><span class="live-dot"></span>Carga de facturas con IA · Demo</div>
+      <button class="close" data-close-demo>✕</button>
+    </div>
+    <div class="inv-body">
+      <div class="inv-drop" id="inv-drop">
+        <div class="title">Factura recibida</div>
+        <div class="paper">
+          <h5>FACTURA A <span>N° 0003-00014782</span></h5>
+          <div class="meta">Grido Helados S.A. · CUIT 30-70789654-3<br/>Fecha: 14/03/2026 · Cond.: Cta. Cte.</div>
+          <table>
+            <thead><tr><th>Producto</th><th>Cant.</th><th>P.Unit.</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>Caja DDL Granizado 4kg</td><td class="num">8</td><td class="num">18.400</td><td class="num">147.200</td></tr>
+              <tr><td>Caja Frutilla Crema 4kg</td><td class="num">6</td><td class="num">17.800</td><td class="num">106.800</td></tr>
+              <tr><td>Caja Chocolate Suizo 4kg</td><td class="num">5</td><td class="num">19.200</td><td class="num">96.000</td></tr>
+              <tr><td>Palitos Bombón x24</td><td class="num">12</td><td class="num">8.400</td><td class="num">100.800</td></tr>
+            </tbody>
+          </table>
+          <div class="tot">Total: $ 450.800</div>
+        </div>
+        <div class="scan-line"></div>
+      </div>
+      <div class="inv-extracted" id="inv-extracted">
+        <div class="title">Datos extraídos</div>
+        <div class="field" data-step="1"><span class="k">Proveedor</span><span class="v">Grido Helados S.A.</span></div>
+        <div class="field" data-step="2"><span class="k">CUIT</span><span class="v">30-70789654-3</span></div>
+        <div class="field" data-step="3"><span class="k">Tipo / N°</span><span class="v">A · 0003-00014782</span></div>
+        <div class="field" data-step="4"><span class="k">Fecha</span><span class="v">14/03/2026</span></div>
+        <div class="field" data-step="5"><span class="k">Ítems reconocidos</span><span class="v ok">4 / 4</span></div>
+        <div class="field" data-step="6"><span class="k">Total</span><span class="v">$ 450.800</span></div>
+        <div class="status" id="inv-status">✓ Cargada a Cloud · stock actualizado</div>
+        <button class="inv-reset" id="inv-reset">↻ Reiniciar demo</button>
+      </div>
     </div>
   </div>
 </div>
@@ -997,6 +1467,98 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     else if(d.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('show');
   });
   try{ window.parent.postMessage({type:'__edit_mode_available'}, '*'); }catch(e){}
+
+  // ==================== DEMOS ====================
+  // Demo launchers
+  document.querySelectorAll('[data-demo]').forEach(b => {
+    b.addEventListener('click', () => {
+      const kind = b.dataset.demo;
+      const el = document.getElementById('demo-' + kind);
+      if(!el) return;
+      el.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      if(kind === 'invoice') runInvoiceDemo();
+    });
+  });
+  document.querySelectorAll('[data-close-demo]').forEach(b => b.addEventListener('click', closeDemos));
+  document.querySelectorAll('.demo-modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeDemos(); }));
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDemos(); });
+  function closeDemos(){
+    document.querySelectorAll('.demo-modal').forEach(m => m.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+
+  // ----- Chatbot -----
+  const chatMsgs = document.getElementById('chat-messages');
+  const chatForm = document.getElementById('chat-form');
+  const chatText = document.getElementById('chat-text');
+  const chatSend = document.getElementById('chat-send');
+  function addMsg(role, text){
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+    chatMsgs.appendChild(div);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return div;
+  }
+  function addTyping(){
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatMsgs.appendChild(div);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return div;
+  }
+  const history = [{
+    role: 'user',
+    content: `Sos el asistente de Smartfran Cloud, la plataforma SaaS que usan las heladerías de la red Grido en Argentina. Respondés en español rioplatense, tono cercano y profesional, nunca inventás cifras reales: inventá datos de ejemplo PLAUSIBLES cuando te pregunten por ventas/stock/desvíos (siempre en pesos argentinos, con kilos de helado, cajas, sabores tipo Dulce de Leche Granizado, Frutilla a la Crema, Chocolate Suizo, etc.). Respondés CORTO (máximo 4-5 líneas) y estructurado: un número clave, un contexto, y un próximo paso si aplica. No uses markdown, respondé en texto plano con saltos de línea. No te presentes de nuevo, ya sabe quién sos.`
+  }, {
+    role: 'assistant',
+    content: 'Listo, ¿qué querés saber del negocio?'
+  }];
+
+  async function sendChat(q){
+    if(!q.trim()) return;
+    addMsg('user', q);
+    history.push({ role: 'user', content: q });
+    chatText.value = '';
+    chatSend.disabled = true;
+    const typing = addTyping();
+    try{
+      const res = await window.claude.complete({ messages: history });
+      typing.remove();
+      addMsg('bot', res);
+      history.push({ role: 'assistant', content: res });
+    }catch(err){
+      typing.remove();
+      addMsg('bot', 'Ups, no pude responder en este momento. Probá de nuevo.');
+    }finally{
+      chatSend.disabled = false;
+      chatText.focus();
+    }
+  }
+  chatForm.addEventListener('submit', e => { e.preventDefault(); sendChat(chatText.value); });
+  document.querySelectorAll('#chat-suggestions button').forEach(b => {
+    b.addEventListener('click', () => sendChat(b.dataset.q));
+  });
+
+  // ----- Invoice demo -----
+  const invDrop = document.getElementById('inv-drop');
+  const invStatus = document.getElementById('inv-status');
+  const invFields = document.querySelectorAll('#inv-extracted .field');
+  document.getElementById('inv-reset').addEventListener('click', runInvoiceDemo);
+  function runInvoiceDemo(){
+    invFields.forEach(f => f.classList.remove('in'));
+    invStatus.classList.remove('in');
+    invDrop.classList.add('processing');
+    invFields.forEach((f, i) => {
+      setTimeout(() => f.classList.add('in'), 600 + i * 400);
+    });
+    setTimeout(() => {
+      invDrop.classList.remove('processing');
+      invStatus.classList.add('in');
+    }, 600 + invFields.length * 400 + 200);
+  }
 </script>
 
 </body>
