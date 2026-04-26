@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Smartfran Cloud · La heladería, en tiempo real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "bg": "#0F0035",
+  "surface": "#1A0A4A",
+  "surface2": "#22127A",
+  "ink": "#F4F4F4",
+  "muted": "#9E8FE8",
+  "line": "#2E1880",
+  "accent": "#6300FF",
+  "accentHot": "#AE00FF",
+  "accent2": "#F0B034",
+  "accent3": "#2CCED7",
+  "posUrl": "https://mlombardisf.github.io/smartfran-cloud",
+  "posDisplayUrl": "grido.pos.smartfran.com"
+}/*EDITMODE-END*/;
+</script>
+<style>
+  :root{
+    --bg:#0F0035; --surface:#1A0A4A; --surface2:#22127A;
+    --ink:#F4F4F4; --muted:#9E8FE8; --line:#2E1880;
+    --accent:#6300FF; --accent-hot:#AE00FF; --accent2:#F0B034; --accent3:#2CCED7;
+    --display:"Montserrat", ui-sans-serif, system-ui, sans-serif;
+    --sans:"Montserrat", ui-sans-serif, system-ui, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, monospace;
+    --maxw: 1400px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.5;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  .mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .eyebrow{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent2)}
+
+  /* LOGO (oficial) */
+  .sf-logo{display:inline-flex;align-items:center;gap:14px;color:var(--ink)}
+  .sf-logo .word{height:32px;width:auto;display:block}
+  footer .sf-logo .word{height:26px}
+
+  /* NAV */
+  nav.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:color-mix(in oklab, var(--bg) 82%, transparent);border-bottom:1px solid var(--line)}
+  nav.top .row{display:flex;align-items:center;justify-content:space-between;height:72px;gap:32px}
+  nav .links{display:flex;gap:28px;font-size:13px;color:var(--muted);font-weight:500}
+  nav .links a:hover{color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid var(--line);transition:all .2s;letter-spacing:.02em}
+  .btn:hover{border-color:var(--ink)}
+  .btn.primary{background:var(--accent2);color:#0F0035;border-color:var(--accent2)}
+  .btn.primary:hover{background:#ffc452;border-color:#ffc452;transform:translateY(-1px)}
+  .btn.violet{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+  .btn.violet:hover{background:#7a1fff;border-color:#7a1fff}
+  .btn .arrow{display:inline-block;transition:transform .2s}
+  .btn:hover .arrow{transform:translateX(3px)}
+  .btn .live-dot{width:7px;height:7px;border-radius:50%;background:#0F0035;animation:beat 1.5s ease-in-out infinite}
+  @keyframes beat{0%,100%{opacity:.35}50%{opacity:1}}
+
+  /* HERO */
+  .hero{position:relative;padding:60px 0 100px;overflow:hidden;min-height:92vh;display:flex;flex-direction:column;justify-content:center}
+  .hero .eyebrow-row{display:flex;align-items:center;gap:16px;margin-bottom:40px}
+  .hero .eyebrow-row::before{content:"";width:48px;height:1px;background:var(--accent2)}
+  .claim{font-family:var(--display);font-size:clamp(52px,10vw,160px);line-height:.92;letter-spacing:-.035em;font-weight:800;margin-bottom:32px;max-width:16ch}
+  .claim .accent{color:var(--accent2)}
+  .claim .thin{font-weight:300;color:var(--muted)}
+  .hero .sub{color:var(--muted);font-size:19px;line-height:1.55;max-width:56ch;margin-bottom:40px}
+  .hero .sub strong{color:var(--ink);font-weight:600}
+  .hero-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;max-width:900px;padding-top:36px;border-top:1px solid var(--line);margin-top:40px}
+  .hero-meta .stat .num{font-family:var(--display);font-size:52px;line-height:1;font-weight:700;letter-spacing:-.02em}
+  .hero-meta .stat .num .pct{color:var(--accent2)}
+  .hero-meta .stat .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero-cta .btn{padding:14px 24px;font-size:14px}
+
+  .hero-art{position:absolute;right:-160px;top:50%;transform:translateY(-50%);width:820px;height:820px;pointer-events:none;opacity:.8}
+  .hero-art .ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--line);animation:spin 80s linear infinite}
+  .hero-art .ring.r2{inset:70px;animation-duration:120s;animation-direction:reverse;border-color:color-mix(in oklab, var(--accent) 40%, transparent)}
+  .hero-art .ring.r3{inset:160px;animation-duration:50s;border-style:dashed;border-color:color-mix(in oklab, var(--accent2) 30%, transparent)}
+  .hero-art .core{position:absolute;inset:240px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #a275ff, var(--accent) 45%, #2a0099 100%);box-shadow:0 0 120px color-mix(in oklab, var(--accent) 60%, transparent), inset -40px -40px 100px color-mix(in oklab, #000 50%, transparent);animation:pulse 5s ease-in-out infinite alternate}
+  .hero-art .core::before{content:"";position:absolute;inset:40px;border-radius:50%;background:radial-gradient(circle at 70% 70%, color-mix(in oklab, var(--accent2) 40%, transparent), transparent 60%)}
+  .hero-art .dot{position:absolute;width:10px;height:10px;border-radius:50%}
+  .hero-art .dot.d1{top:12%;left:46%;background:var(--accent3);box-shadow:0 0 20px var(--accent3)}
+  .hero-art .dot.d2{top:50%;left:2%;background:var(--accent2);box-shadow:0 0 20px var(--accent2)}
+  .hero-art .dot.d3{bottom:18%;right:8%;background:var(--accent3);box-shadow:0 0 20px var(--accent3)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{from{transform:scale(.98)}to{transform:scale(1.02)}}
+
+  /* SECTION BASE */
+  section.block{padding:130px 0;position:relative}
+  .sec-head{display:grid;grid-template-columns:1fr 2fr;gap:80px;align-items:end;margin-bottom:72px}
+  .sec-head .left{display:flex;flex-direction:column;gap:16px}
+  .sec-head h2{font-family:var(--display);font-size:clamp(40px,5vw,72px);line-height:1.02;letter-spacing:-.025em;font-weight:800;max-width:14ch}
+  .sec-head h2 .accent{color:var(--accent2)}
+  .sec-head h2 .thin{font-weight:300;color:var(--muted)}
+  .sec-head .lede{color:var(--muted);font-size:18px;line-height:1.6;max-width:52ch}
+  .sec-head .lede strong{color:var(--ink);font-weight:500}
+
+  /* LEGACY (15 años) */
+  .legacy{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .legacy .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center}
+  .legacy .years{font-family:var(--display);font-size:clamp(140px,22vw,300px);line-height:.82;letter-spacing:-.045em;font-weight:800}
+  .legacy .years .big{display:block;color:var(--ink);background:linear-gradient(180deg, var(--ink) 0%, var(--muted) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .legacy .years .lbl{display:block;font-family:var(--mono);font-size:14px;color:var(--accent2);letter-spacing:.2em;text-transform:uppercase;margin-top:24px;font-weight:400}
+  .legacy h3{font-family:var(--display);font-size:36px;line-height:1.15;margin-bottom:24px;font-weight:700;letter-spacing:-.015em}
+  .legacy p{color:var(--muted);font-size:17px;line-height:1.65;margin-bottom:20px}
+  .legacy p strong{color:var(--ink);font-weight:600}
+  .legacy .pull{color:var(--ink);font-size:22px;font-weight:500;line-height:1.4;border-left:2px solid var(--accent2);padding:4px 0 4px 24px;margin:32px 0;letter-spacing:-.01em}
+
+  /* VALUE PILLARS (tarjetas grandes) */
+  .pillars .pg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .pillar{padding:32px 28px;border:1px solid var(--line);border-radius:20px;background:var(--surface);display:flex;flex-direction:column;gap:16px;min-height:260px;transition:transform .25s, border-color .25s, background .25s}
+  .pillar:hover{transform:translateY(-4px);border-color:var(--accent2);background:var(--surface2)}
+  .pillar .big{font-family:var(--display);font-size:46px;line-height:1;letter-spacing:-.025em;font-weight:800;color:var(--accent2)}
+  .pillar h3{font-family:var(--display);font-size:20px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+  .pillar p{color:var(--muted);font-size:14px;line-height:1.55;margin-top:auto}
+
+  /* BENEFITS BY ROLE */
+  .roles{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .role-tabs{display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap}
+  .role-tab{padding:12px 20px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid var(--line);color:var(--muted);background:var(--bg);letter-spacing:.02em;transition:all .2s;display:inline-flex;align-items:center;gap:10px}
+  .role-tab .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .role-tab.active{color:#0F0035;background:var(--accent2);border-color:var(--accent2)}
+  .role-tab.active .dot{background:#0F0035}
+  .role-tab:hover:not(.active){color:var(--ink);border-color:var(--ink)}
+  .role-panel{display:none;border:1px solid var(--line);border-radius:20px;background:var(--bg);padding:44px;min-height:380px}
+  .role-panel.active{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start}
+  .role-panel .headline{font-family:var(--display);font-size:34px;line-height:1.1;letter-spacing:-.015em;font-weight:700}
+  .role-panel .headline .accent{color:var(--accent2)}
+  .role-panel .headline .thin{font-weight:300;color:var(--muted)}
+  .role-panel .tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .role-panel ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .role-panel li{display:flex;gap:14px;font-size:15px;line-height:1.45}
+  .role-panel li .k{font-family:var(--display);font-weight:700;color:var(--accent2);flex-shrink:0;width:28px}
+  .role-panel li .t{color:var(--ink)}
+  .role-panel li .t span{color:var(--muted);display:block;font-weight:400;font-size:13.5px;margin-top:2px}
+
+  /* CAPABILITIES — interactive cards w/ expand */
+  .features .fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .feat{padding:32px 28px;background:var(--bg);min-height:260px;display:flex;flex-direction:column;gap:14px;position:relative;transition:background .2s;cursor:pointer;text-align:left;width:100%}
+  .feat:hover{background:var(--surface)}
+  .feat .idx{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.15em}
+  .feat .ico{width:44px;height:44px;border-radius:11px;background:color-mix(in oklab, var(--accent) 25%, transparent);display:grid;place-items:center;color:var(--ink)}
+  .feat:nth-child(3n+2) .ico{background:color-mix(in oklab, var(--accent2) 30%, transparent);color:var(--accent2)}
+  .feat:nth-child(3n+3) .ico{background:color-mix(in oklab, var(--accent3) 25%, transparent);color:var(--accent3)}
+  .feat h3{font-family:var(--display);font-size:21px;line-height:1.2;letter-spacing:-.01em;font-weight:700}
+  .feat p{color:var(--muted);font-size:14px;line-height:1.55;margin-top:auto}
+  .feat .more{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent2);margin-top:4px;letter-spacing:.02em}
+  .feat .more::after{content:"→";transition:transform .2s}
+  .feat:hover .more::after{transform:translateX(3px)}
+
+  /* MODAL */
+  .modal-backdrop{position:fixed;inset:0;background:color-mix(in oklab, #000 65%, transparent);backdrop-filter:blur(10px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto}
+  .modal-backdrop.open{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--line);border-radius:22px;max-width:820px;width:100%;padding:48px;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.8);animation:pop .3s ease}
+  @keyframes pop{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal .close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font-size:18px;color:var(--muted);transition:all .2s}
+  .modal .close:hover{color:var(--ink);border-color:var(--ink)}
+  .modal .mico{width:56px;height:56px;border-radius:14px;background:color-mix(in oklab, var(--accent2) 25%, transparent);color:var(--accent2);display:grid;place-items:center;margin-bottom:20px}
+  .modal .meyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .modal h2{font-family:var(--display);font-size:36px;line-height:1.1;letter-spacing:-.02em;font-weight:800;margin-bottom:20px}
+  .modal h2 .accent{color:var(--accent2)}
+  .modal .lede{color:var(--muted);font-size:17px;line-height:1.6;margin-bottom:28px}
+  .modal .lede strong{color:var(--ink);font-weight:600}
+  .modal .split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+  .modal .col{padding:22px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+  .modal .col .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .modal .col.to .tag{color:var(--accent2)}
+  .modal .col h4{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:10px}
+  .modal .col p{color:var(--muted);font-size:14px;line-height:1.55}
+  .modal .bullets{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  .modal .bullets li{list-style:none;display:flex;gap:12px;font-size:14.5px;line-height:1.5;color:var(--ink)}
+  .modal .bullets li::before{content:"✓";color:var(--accent2);font-weight:700;flex-shrink:0}
+  .modal .impact{margin-top:28px;padding:20px 24px;background:linear-gradient(90deg, color-mix(in oklab, var(--accent) 25%, var(--bg)), var(--bg));border:1px solid color-mix(in oklab, var(--accent) 50%, var(--line));border-radius:12px;display:flex;gap:16px;align-items:center}
+  .modal .impact .lb{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--accent2);text-transform:uppercase;flex-shrink:0}
+  .modal .impact .tx{font-family:var(--display);font-size:16px;font-weight:600;line-height:1.4}
+
+  /* MOCKUP INTERACTIVO */
+  .mockup{background:var(--bg);position:relative}
+  .mockup .wrapper{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--surface);box-shadow:0 50px 150px -40px color-mix(in oklab, var(--accent) 50%, transparent)}
+  .mockup .topbar{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface2)}
+  .mockup .dots{display:flex;gap:6px}
+  .mockup .dots span{width:11px;height:11px;border-radius:50%;background:var(--line)}
+  .mockup .url{font-family:var(--mono);font-size:12px;color:var(--muted);padding:6px 14px;border-radius:6px;background:color-mix(in oklab, var(--bg) 50%, transparent);border:1px solid var(--line);flex:1;max-width:480px}
+  .mockup .live{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);padding:5px 10px;border:1px solid color-mix(in oklab, var(--accent3) 40%, transparent);border-radius:999px;background:color-mix(in oklab, var(--accent3) 12%, transparent)}
+  .mockup .live .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:beat 1.5s ease-in-out infinite}
+  .mockup .frame-wrap{position:relative;aspect-ratio:16/10;background:var(--bg);overflow:hidden}
+  .mockup iframe{position:absolute;top:0;left:0;border:0;display:block;transform-origin:top left;overflow:hidden}
+  .mockup .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;gap:18px}
+  .mockup .empty .ph-ico{width:64px;height:64px;border-radius:16px;background:color-mix(in oklab, var(--accent2) 20%, transparent);color:var(--accent2);display:grid;place-items:center}
+  .mockup .empty h3{font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:-.015em}
+  .mockup .empty p{color:var(--muted);font-size:15px;max-width:48ch;line-height:1.55}
+  .mockup .empty code{font-family:var(--mono);font-size:12px;padding:4px 8px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--accent2)}
+  .mockup .empty .hint{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+  .mockup .scan{position:absolute;bottom:24px;right:24px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
+  .mockup .scan .note{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);background:color-mix(in oklab, var(--bg) 80%, transparent);padding:4px 8px;border-radius:4px;border:1px solid var(--line)}
+
+  /* SUITE */
+  .suite{background:var(--bg);position:relative;overflow:hidden}
+  .suite::before{content:"";position:absolute;top:0;right:-100px;width:500px;height:500px;background:url(assets/brand/pattern-llave.png) no-repeat center/contain;opacity:.035;pointer-events:none;transform:rotate(15deg)}
+  .suite-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:1}
+  .suite-card{padding:40px 32px 36px;border:1px solid var(--line);border-radius:20px;background:var(--surface);display:flex;flex-direction:column;gap:20px;min-height:320px;transition:transform .25s,border-color .25s;position:relative;overflow:hidden}
+  .suite-card:hover{transform:translateY(-4px)}
+  .suite-card.cloud{background:linear-gradient(135deg, color-mix(in oklab, var(--accent) 30%, var(--surface)), var(--surface));border-color:color-mix(in oklab, var(--accent) 50%, var(--line))}
+  .suite-card.loyalty{background:linear-gradient(135deg, color-mix(in oklab, var(--accent3) 20%, var(--surface)), var(--surface));border-color:color-mix(in oklab, var(--accent3) 40%, var(--line))}
+  .suite-card.pedidos{background:linear-gradient(135deg, color-mix(in oklab, var(--accent2) 20%, var(--surface)), var(--surface));border-color:color-mix(in oklab, var(--accent2) 40%, var(--line))}
+  .suite-card .slogo{height:52px;width:auto;align-self:flex-start;filter:drop-shadow(0 2px 12px color-mix(in oklab, #000 40%, transparent))}
+  .suite-card.cloud .slogo{filter:brightness(0) invert(1) drop-shadow(0 2px 12px color-mix(in oklab, #000 40%, transparent))}
+  .suite-card .role{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .suite-card p{color:var(--ink);font-size:15px;line-height:1.55;margin-top:auto;font-weight:500}
+  .suite-card.cloud p{color:var(--ink)}
+  @media (max-width:960px){
+    .suite-grid{grid-template-columns:1fr}
+  }
+  .migration .tline{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;margin-top:40px}
+  .migration .tline::before{content:"";position:absolute;left:0;right:0;top:28px;height:1px;background:var(--line)}
+  .migration .step{position:relative;padding-top:60px}
+  .migration .step .dot{position:absolute;top:22px;left:0;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--accent2)}
+  .migration .step.done .dot{background:var(--accent2)}
+  .migration .step .n{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.15em;margin-bottom:12px}
+  .migration .step h3{font-family:var(--display);font-size:22px;line-height:1.2;margin-bottom:10px;font-weight:700;letter-spacing:-.01em}
+  .migration .step p{color:var(--muted);font-size:14px;line-height:1.6}
+  .migration .promise{margin-top:60px;padding:28px 32px;border:1px solid var(--line);border-radius:16px;display:flex;gap:24px;align-items:center;background:linear-gradient(90deg, color-mix(in oklab, var(--accent) 15%, var(--surface)), var(--surface))}
+  .migration .promise .tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);flex-shrink:0}
+  .migration .promise p{font-family:var(--display);font-size:22px;line-height:1.35;font-weight:500;letter-spacing:-.01em}
+  .migration .promise p strong{color:var(--accent2);font-weight:700}
+
+  /* INFRA MANIFESTO BAND */
+  .infra-band{background:var(--bg);padding:70px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .infra-band::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 15% 50%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 45%),
+    radial-gradient(circle at 85% 50%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 40%);
+    pointer-events:none;opacity:.7}
+  .infra-band .row{display:grid;grid-template-columns:auto 1fr auto;gap:48px;align-items:center;position:relative;z-index:2}
+  .infra-band .big-icon{width:96px;height:96px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:color-mix(in oklab, var(--accent2) 15%, var(--surface));border:1px solid var(--accent2);color:var(--accent2);flex-shrink:0}
+  .infra-band .msg{display:flex;flex-direction:column;gap:8px}
+  .infra-band .msg .tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:500}
+  .infra-band .msg h3{font-family:var(--display);font-size:clamp(26px,3.3vw,40px);line-height:1.15;font-weight:700;letter-spacing:-.02em;max-width:36ch}
+  .infra-band .msg h3 .accent{color:var(--accent2)}
+  .infra-band .msg h3 .thin{font-weight:300;color:var(--muted)}
+  .infra-band .steps-inline{display:flex;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);align-items:center;flex-wrap:wrap;margin-top:4px}
+  .infra-band .steps-inline .sep{color:var(--accent2)}
+  .infra-band .steps-inline strong{color:var(--ink);font-weight:500}
+  .infra-band .kill{display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--muted);border-left:1px solid var(--line);padding-left:32px;min-width:240px}
+  .infra-band .kill .k{display:flex;align-items:center;gap:10px}
+  .infra-band .kill .k::before{content:"✕";color:#e3506a;font-weight:700;font-size:16px;width:16px}
+  .infra-band .kill .k strong{color:var(--ink);font-weight:600}
+  @media (max-width:960px){
+    .infra-band .row{grid-template-columns:1fr;gap:24px}
+    .infra-band .kill{border-left:none;border-top:1px solid var(--line);padding:24px 0 0}
+    .infra-band .big-icon{width:64px;height:64px}
+  }
+
+  /* BI STRATEGIC — new version */
+  .bi-strat{background:var(--surface);border-top:1px solid var(--line);position:relative;overflow:hidden}
+  .bi-strat::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle, color-mix(in oklab, var(--accent2) 15%, transparent), transparent 60%);pointer-events:none}
+  .bi-strat .sec-head{position:relative;z-index:2}
+  .bi-strat h2 .role-flip{display:inline-block;position:relative}
+  .bi-strat h2 .role-flip .from{color:var(--muted);font-weight:300;position:relative}
+  .bi-strat h2 .role-flip .from::after{content:"";position:absolute;left:-4%;right:-4%;top:55%;height:5px;background:color-mix(in oklab, var(--muted) 50%, transparent);transform:rotate(-2deg)}
+
+  /* Top banner: role shift */
+  .role-shift{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;padding:32px 40px;border:1px solid var(--line);border-radius:22px;background:var(--bg);margin-bottom:48px}
+  .role-shift .side{display:flex;flex-direction:column;gap:8px}
+  .role-shift .side .k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .role-shift .side h4{font-family:var(--display);font-size:22px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
+  .role-shift .side.before h4{color:var(--muted);font-weight:400}
+  .role-shift .side.after h4 .accent{color:var(--accent2)}
+  .role-shift .side .desc{font-size:13px;color:var(--muted);line-height:1.5}
+  .role-shift .arrow-big{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--accent2)}
+  .role-shift .arrow-big .chev{font-size:32px;font-weight:300;line-height:1}
+  .role-shift .arrow-big .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+  @media (max-width:760px){
+    .role-shift{grid-template-columns:1fr;padding:24px;text-align:left}
+    .role-shift .arrow-big{flex-direction:row;gap:10px}
+    .role-shift .arrow-big .chev{transform:rotate(90deg)}
+  }
+
+  /* Dashboard mock */
+  .bi-dashboard{position:relative;z-index:2;background:#F6F4EF;color:#1a1530;border-radius:24px;padding:28px 28px 24px;box-shadow:0 32px 80px rgba(0,0,0,.45), 0 0 0 1px color-mix(in oklab, var(--accent2) 30%, transparent);margin-bottom:32px;position:relative}
+  .bi-dashboard::before{content:"Tablero en vivo";position:absolute;top:-11px;right:32px;font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:var(--accent2);color:#0F0035;padding:4px 12px;border-radius:20px;font-weight:700}
+  .bi-dashboard .dash-head{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #e5dbc9}
+  .bi-dashboard .dash-head h4{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.1;color:#1a1530}
+  .bi-dashboard .dash-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#7a6e8c;text-transform:uppercase;display:flex;gap:12px;align-items:center}
+  .bi-dashboard .dash-head .meta .live-pulse{width:7px;height:7px;border-radius:50%;background:#2cce6e;animation:beat 1.5s infinite}
+  .bi-dashboard .filters{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+  .bi-dashboard .filters .chip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;border:1px solid #d4c8b8;color:#4a3b6e;cursor:pointer;transition:all .15s;background:#fff}
+  .bi-dashboard .filters .chip.active{background:#1a1530;color:#F6F4EF;border-color:#1a1530}
+  .bi-dashboard .filters .chip:hover{border-color:#1a1530}
+  .bi-dashboard .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .bi-dashboard .kpi{padding:16px 18px;background:#fff;border-radius:14px;border:1px solid #e5dbc9;display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden;transition:transform .2s, box-shadow .2s}
+  .bi-dashboard .kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,21,48,.08)}
+  .bi-dashboard .kpi .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#7a6e8c}
+  .bi-dashboard .kpi .v{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:-.02em;color:#1a1530;line-height:1}
+  .bi-dashboard .kpi .v .unit{font-size:13px;color:#7a6e8c;font-weight:500;margin-left:2px}
+  .bi-dashboard .kpi .delta{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em}
+  .bi-dashboard .kpi .delta.up{color:#2a8a50}
+  .bi-dashboard .kpi .delta.dn{color:#c0335d}
+  .bi-dashboard .kpi .spark{position:absolute;right:12px;bottom:10px;opacity:.5}
+  .bi-dashboard .charts{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+  .bi-dashboard .card-mini{padding:16px;background:#fff;border-radius:14px;border:1px solid #e5dbc9}
+  .bi-dashboard .card-mini .t{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#7a6e8c;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+  .bi-dashboard .card-mini .t .drill{color:#6300FF;font-weight:600;cursor:pointer}
+  .bi-dashboard .card-mini svg{width:100%;height:auto}
+  .bi-dashboard .ranking{display:flex;flex-direction:column;gap:6px}
+  .bi-dashboard .ranking .r{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;font-size:12px;padding:4px 0}
+  .bi-dashboard .ranking .r .rk{font-family:var(--mono);color:#7a6e8c;font-size:10px}
+  .bi-dashboard .ranking .r .nm{color:#1a1530;font-weight:500;position:relative;padding-left:8px}
+  .bi-dashboard .ranking .r .nm::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:2px;background:var(--sw,#9E8FE8)}
+  .bi-dashboard .ranking .r .nm small{color:#7a6e8c;font-weight:400;margin-left:6px}
+  .bi-dashboard .ranking .r .bar{width:90px;height:6px;background:#f0e9da;border-radius:3px;overflow:hidden;position:relative}
+  .bi-dashboard .ranking .r .bar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,50%);background:var(--sw,#9E8FE8);border-radius:3px}
+  @media (max-width:880px){
+    .bi-dashboard .kpis{grid-template-columns:1fr 1fr}
+    .bi-dashboard .charts{grid-template-columns:1fr}
+  }
+
+  /* Decision ladder below */
+  .bi-use{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .bi-use .box{padding:24px 22px;background:var(--bg);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;gap:10px}
+  .bi-use .box .num{font-family:var(--display);font-size:34px;font-weight:800;color:var(--accent2);line-height:1;letter-spacing:-.02em}
+  .bi-use .box h4{font-family:var(--display);font-size:16px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+  .bi-use .box p{font-size:13px;color:var(--muted);line-height:1.5}
+  .bi-use .box p strong{color:var(--ink);font-weight:600}
+  @media (max-width:960px){
+    .bi-use{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:560px){
+    .bi-use{grid-template-columns:1fr}
+  }
+
+  /* ROADMAP */
+  .roadmap{background:var(--bg)}
+  .roadmap .tracks{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .roadmap .track{padding:32px;border:1px solid var(--line);border-radius:22px;background:var(--surface);position:relative;overflow:hidden}
+  .roadmap .track.innovation{background:linear-gradient(135deg, color-mix(in oklab, var(--accent) 22%, var(--surface)) 0%, var(--surface) 70%);border-color:color-mix(in oklab, var(--accent) 40%, var(--line))}
+  .roadmap .track .track-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:20px}
+  .roadmap .track .track-head h3{font-family:var(--display);font-size:28px;line-height:1.1;font-weight:700;letter-spacing:-.02em}
+  .roadmap .track .track-head h3 .accent{color:var(--accent2)}
+  .roadmap .track .track-head h3 .accent-v{color:var(--accent);background:linear-gradient(90deg, #a275ff, var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .roadmap .track .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px}
+  .roadmap .track.innovation .kicker{color:#c79dff}
+  .roadmap .track .pill{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;border-radius:20px;background:var(--bg);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+  .roadmap .track .pill.live{background:var(--accent2);border-color:var(--accent2);color:#0F0035;font-weight:700}
+  .roadmap .milestones{display:flex;flex-direction:column;gap:14px}
+  .roadmap .ms{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 16px;background:var(--bg);border:1px solid var(--line);border-radius:12px;transition:border-color .2s}
+  .roadmap .ms:hover{border-color:var(--accent2)}
+  .roadmap .ms .q{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--accent2);text-transform:uppercase;font-weight:600}
+  .roadmap .ms .t{font-size:14px;color:var(--ink);font-weight:500;line-height:1.4}
+  .roadmap .ms .t small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}
+  .roadmap .ms .st{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+
+  /* DEMO BAR */
+  .demo-bar{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .demo-launch{display:flex;gap:12px;align-items:center;padding:14px 18px;border-radius:14px;background:var(--bg);border:1px solid var(--line);cursor:pointer;text-align:left;transition:all .2s;width:100%}
+  .demo-launch:hover{border-color:var(--accent2);transform:translateY(-2px)}
+  .demo-launch .ico-wrap{width:38px;height:38px;border-radius:10px;background:color-mix(in oklab, var(--accent) 20%, transparent);display:flex;align-items:center;justify-content:center;color:var(--accent2);flex-shrink:0}
+  .demo-launch .txt{flex:1}
+  .demo-launch .txt .t{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:-.005em}
+  .demo-launch .txt .s{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .demo-launch .arrow{color:var(--accent2);font-weight:700}
+
+  @media (max-width:960px){
+    .roadmap .tracks{grid-template-columns:1fr}
+    .demo-bar{grid-template-columns:1fr}
+  }
+
+  /* DEMO MODAL (chatbot + invoice) */
+  .demo-modal{position:fixed;inset:0;background:rgba(5,0,20,.85);backdrop-filter:blur(10px);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .demo-modal.open{display:flex}
+  .demo-sheet{width:min(680px,100%);max-height:90vh;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .demo-sheet .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line);background:var(--surface2)}
+  .demo-sheet .sheet-head .t{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:16px}
+  .demo-sheet .sheet-head .t .live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);animation:beat 1.5s infinite}
+  .demo-sheet .sheet-head .close{font-size:20px;color:var(--muted);cursor:pointer;background:none;border:none;padding:4px 10px;border-radius:8px}
+  .demo-sheet .sheet-head .close:hover{color:var(--ink);background:var(--line)}
+
+  /* Chatbot */
+  .chat-body{flex:1;display:flex;flex-direction:column;min-height:400px;max-height:60vh}
+  .chat-messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+  .chat-messages::-webkit-scrollbar{width:6px}
+  .chat-messages::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .chat-msg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .chat-msg.user{align-self:flex-end;background:var(--accent);color:var(--ink);border-bottom-right-radius:4px}
+  .chat-msg.bot{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .chat-msg.bot strong{color:var(--accent2)}
+  .chat-msg.typing{display:flex;gap:4px;align-items:center}
+  .chat-msg.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typing 1.2s infinite}
+  .chat-msg.typing span:nth-child(2){animation-delay:.15s}
+  .chat-msg.typing span:nth-child(3){animation-delay:.3s}
+  @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+  .chat-input{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--line);background:var(--bg)}
+  .chat-input input{flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:11px 16px;border-radius:999px;font-family:var(--sans);font-size:14px;outline:none}
+  .chat-input input:focus{border-color:var(--accent2)}
+  .chat-input button{padding:11px 20px;border-radius:999px;background:var(--accent2);color:#0F0035;font-weight:700;font-size:13px;font-family:var(--sans);border:none;cursor:pointer}
+  .chat-input button:disabled{opacity:.5;cursor:not-allowed}
+  .chat-suggestions{display:flex;gap:8px;padding:12px 24px 0;flex-wrap:wrap}
+  .chat-suggestions button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted);cursor:pointer}
+  .chat-suggestions button:hover{border-color:var(--accent2);color:var(--ink)}
+
+  /* Invoice demo */
+  .inv-body{padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;min-height:420px}
+  .inv-drop{border:2px dashed var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;background:var(--bg);position:relative;overflow:hidden}
+  .inv-drop.processing{border-color:var(--accent2);border-style:solid}
+  .inv-drop .title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+  .inv-drop .paper{background:#f8f4ee;color:#2a1b45;border-radius:8px;padding:14px;font-family:"JetBrains Mono", ui-monospace, monospace;font-size:10px;line-height:1.5;position:relative;min-height:220px}
+  .inv-drop .paper h5{font-family:var(--display);font-weight:700;font-size:13px;margin-bottom:6px;color:#2a1b45;display:flex;justify-content:space-between}
+  .inv-drop .paper .meta{color:#6b5a85;margin-bottom:10px;font-size:9px}
+  .inv-drop .paper table{width:100%;border-collapse:collapse;font-size:9px;margin-top:6px}
+  .inv-drop .paper table th{text-align:left;border-bottom:1px solid #c9b9e0;padding:4px 2px;font-weight:700;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+  .inv-drop .paper table td{padding:3px 2px;border-bottom:1px dotted #d9ccec}
+  .inv-drop .paper table td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .inv-drop .paper .tot{text-align:right;margin-top:8px;font-size:11px;font-weight:700}
+  .inv-drop .scan-line{position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, color-mix(in oklab, var(--accent2) 40%, transparent) 50%, transparent 60%);animation:scan-inv 2s linear infinite;pointer-events:none;display:none}
+  .inv-drop.processing .scan-line{display:block}
+  @keyframes scan-inv{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+  .inv-extracted{display:flex;flex-direction:column;gap:10px}
+  .inv-extracted .title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2)}
+  .inv-extracted .field{padding:10px 14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;display:flex;justify-content:space-between;font-size:13px;opacity:0;transform:translateX(20px);transition:all .3s}
+  .inv-extracted .field.in{opacity:1;transform:translateX(0)}
+  .inv-extracted .field .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .inv-extracted .field .v{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:12px}
+  .inv-extracted .field .v.ok::after{content:" ✓";color:var(--accent2)}
+  .inv-extracted .status{margin-top:auto;padding:12px 16px;border-radius:12px;background:color-mix(in oklab, var(--accent2) 18%, transparent);border:1px solid var(--accent2);color:var(--accent2);font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;text-align:center;font-weight:700;opacity:0;transition:opacity .4s}
+  .inv-extracted .status.in{opacity:1}
+  .inv-reset{margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--accent2);cursor:pointer;background:none;border:none;letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:0}
+  .inv-reset:hover{text-decoration:underline}
+
+  @media (max-width:700px){
+    .inv-body{grid-template-columns:1fr}
+  }
+
+  /* OBJECTIONS */
+  .objections{background:var(--bg)}
+  .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+  .obj{padding:28px 30px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+  .obj .q{font-family:var(--display);font-size:19px;line-height:1.3;font-weight:700;letter-spacing:-.01em;margin-bottom:12px}
+  .obj .q::before{content:"";display:inline-block;width:18px;height:2px;background:var(--accent2);margin-right:10px;vertical-align:middle}
+  .obj .a{color:var(--muted);font-size:14.5px;line-height:1.6}
+  .obj .a strong{color:var(--ink);font-weight:600}
+
+  /* CTA */
+  .cta{text-align:center;padding:160px 0 120px;position:relative;overflow:hidden;background:var(--surface);border-top:1px solid var(--line)}
+  .cta .eyebrow{margin-bottom:32px}
+  .cta h2{font-family:var(--display);font-size:clamp(52px,8vw,120px);line-height:.95;letter-spacing:-.035em;font-weight:800;margin-bottom:28px;max-width:20ch;margin-left:auto;margin-right:auto}
+  .cta h2 .accent{color:var(--accent2)}
+  .cta h2 .thin{font-weight:300;color:var(--muted)}
+  .cta .lede{color:var(--muted);font-size:18px;max-width:60ch;margin:0 auto;line-height:1.6}
+  .cta .ctrow{display:flex;gap:24px;align-items:center;justify-content:center;margin-top:48px;flex-wrap:wrap}
+  .cta .big-cta{padding:22px 36px;font-size:17px;box-shadow:0 12px 40px color-mix(in oklab, var(--accent2) 40%, transparent)}
+  .cta .stand{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:72px}
+  .cta-glow{position:absolute;inset:auto 0 -200px 0;height:500px;background:radial-gradient(ellipse at center, color-mix(in oklab, var(--accent) 60%, transparent), transparent 70%);pointer-events:none;opacity:.55}
+  .cta-glow2{position:absolute;inset:auto 20% -240px auto;width:400px;height:400px;background:radial-gradient(circle, color-mix(in oklab, var(--accent2) 50%, transparent), transparent 70%);pointer-events:none;opacity:.35}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:40px 0;background:var(--bg)}
+  footer .row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}
+  footer .col{display:flex;gap:24px;font-size:13px;color:var(--muted);font-weight:500}
+
+  /* TWEAKS */
+  #tweaks{position:fixed;right:20px;bottom:20px;z-index:100;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;width:320px;display:none;box-shadow:0 20px 80px rgba(0,0,0,.7);font-family:var(--sans)}
+  #tweaks.show{display:block}
+  #tweaks h4{font-family:var(--display);font-size:16px;margin-bottom:14px;font-weight:700;letter-spacing:-.01em}
+  #tweaks .f{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;font-size:12px;color:var(--muted)}
+  #tweaks input[type=color]{width:32px;height:24px;border:none;background:none;padding:0;border-radius:4px;cursor:pointer}
+  #tweaks input[type=text]{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:7px 10px;border-radius:6px;font-size:11px;font-family:var(--mono)}
+  #tweaks .note{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;line-height:1.5}
+
+  /* RESPONSIVE */
+  @media (max-width:960px){
+    .wrap{padding:0 20px}
+    nav.top .links{display:none}
+    nav.top .row{height:64px}
+    .hero{padding:30px 0 60px;min-height:auto}
+    .hero-art{display:none}
+    .claim{font-size:clamp(42px,11vw,72px)}
+    .hero-meta{grid-template-columns:1fr 1fr;gap:24px}
+    section.block{padding:80px 0}
+    .sec-head{grid-template-columns:1fr;gap:24px;margin-bottom:48px}
+    .legacy .grid{grid-template-columns:1fr;gap:40px}
+    .pillars .pg{grid-template-columns:1fr 1fr}
+    .role-panel.active{grid-template-columns:1fr;gap:32px}
+    .features .fgrid{grid-template-columns:1fr}
+    .modal{padding:32px 24px}
+    .modal .split{grid-template-columns:1fr}
+    .mockup .frame-wrap{aspect-ratio:4/5}
+    .migration .tline{grid-template-columns:1fr;gap:40px}
+    .migration .tline::before{display:none}
+    .migration .promise{flex-direction:column;align-items:flex-start;gap:14px}
+    .obj-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body data-screen-label="01 Landing Smartfran Cloud">
+
+<!-- NAV -->
+<nav class="top">
+  <div class="wrap row">
+    <a href="#" class="sf-logo" aria-label="Smartfran Cloud">
+      <img class="word" src="assets/brand/SmartFran-Cloud-white.png" alt="Smartfran Cloud" />
+    </a>
+    <div class="links">
+      <a href="#legado">15 años</a>
+      <a href="#valor">Valor</a>
+      <a href="#capacidades">Capacidades</a>
+      <a href="#bi">BI</a>
+      <a href="#probalo">Probalo</a>
+      <a href="#roadmap">Roadmap + IA</a>
+      <a href="#migracion">Migración</a>
+    </div>
+    <a href="#probalo" class="btn primary"><span class="live-dot"></span>Probá el POS ahora <span class="arrow">→</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="eyebrow-row">
+      <span class="eyebrow">Mismo ADN. Nueva era.</span>
+    </div>
+    <h1 class="claim">
+      <span class="thin">Tu heladería,</span><br/>
+      en <span class="accent">tiempo real</span>.
+    </h1>
+    <p class="sub">Sin servidor en el local. Sin sincronizar turnos. Sin pesar cada caja. La plataforma que <strong>libera tiempo</strong>, <strong>baja costos</strong> e <strong>impulsa las ventas</strong> — pensada desde cero para la forma en que operan tus heladerías.</p>
+    <div class="hero-cta">
+      <a href="#probalo" class="btn primary"><span class="live-dot"></span>Probá el POS ahora <span class="arrow">→</span></a>
+      <a href="#valor" class="btn violet">Ver qué gana el franquiciado</a>
+    </div>
+    <div class="hero-meta">
+      <div class="stat">
+        <div class="num">+$</div>
+        <div class="lbl">Más ventas<br/>Club Grido en vivo</div>
+      </div>
+      <div class="stat">
+        <div class="num">–$</div>
+        <div class="lbl">Menos costos<br/>Cero servidor local</div>
+      </div>
+      <div class="stat">
+        <div class="num">–⏱</div>
+        <div class="lbl">Menos tareas<br/>Sin pesar cajas</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+    <div class="core"></div>
+    <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+  </div>
+</header>
+
+<!-- LEGACY -->
+<section class="block legacy" id="legado">
+  <div class="wrap">
+    <div class="grid">
+      <div class="years">
+        <span class="big">15</span>
+        <span class="lbl">On Premise · 2011 → 2026</span>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px">— Honramos lo construido</div>
+        <h3>Mismo ADN.<br/><span style="color:var(--accent2)">Nueva era.</span></h3>
+        <p style="margin-top:20px">Una plataforma no llega a 15 años por casualidad.</p>
+        <p>Smartfran On&nbsp;Premise acompañó a la red durante <strong>más de una década y media</strong>. Estable, veloz, conocida por todos los equipos de tus heladerías. Un NPS que habla por sí solo.</p>
+        <p class="pull">Cloud no reemplaza ese camino: lo capitaliza.</p>
+        <p>Tomamos lo que funciona y lo llevamos a otra escala. La <strong>lógica de tu negocio es la misma</strong>. Lo que cambia es el tiempo que te libera, los costos que desaparecen y las ventas que antes se escapaban.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFRA MANIFESTO BAND -->
+<section class="infra-band" id="infra" aria-label="Cero instalaciones">
+  <div class="wrap">
+    <div class="row">
+      <div class="big-icon">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="4" width="18" height="13" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+          <path d="M9 10l2 2 4-4" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="msg">
+        <span class="tag">Infraestructura · Instalación cero</span>
+        <h3><span class="thin">Se terminaron las instalaciones, las reinstalaciones y los técnicos en el local.</span> Abrís el dispositivo, te logueás y <span class="accent">empezás a operar</span>.</h3>
+        <div class="steps-inline">
+          <span><strong>01</strong> Abrís tu dispositivo</span>
+          <span class="sep">→</span>
+          <span><strong>02</strong> Te logueás</span>
+          <span class="sep">→</span>
+          <span><strong>03</strong> Operás</span>
+        </div>
+      </div>
+      <div class="kill">
+        <div class="k"><strong>Setup inicial</strong></div>
+        <div class="k"><strong>Reinstalaciones</strong></div>
+        <div class="k"><strong>Actualizaciones manuales</strong></div>
+        <div class="k"><strong>Soporte para instalar</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE PILLARS -->
+<section class="block pillars" id="valor">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Lo que ganás</span>
+        <h2>Cuatro formas<br/>de ganar <span class="accent">más plata</span>.</h2>
+      </div>
+      <p class="lede">Smartfran Cloud se paga solo. <strong>Más ventas</strong> porque atendés mejor al socio Club Grido; <strong>menos costos</strong> porque desaparece la infraestructura local; <strong>menos tiempo</strong> perdido en tareas operativas; <strong>más control</strong> del negocio en vivo.</p>
+    </div>
+
+    <div class="pg">
+      <article class="pillar">
+        <div class="big">+ Ventas</div>
+        <h3>Club Grido te ayuda a vender más.</h3>
+        <p>Durante la venta ves nombre, puntos, cumpleaños, producto favorito y promociones del socio. Más ofrecimientos, más ticket promedio, más recompra.</p>
+      </article>
+      <article class="pillar">
+        <div class="big">– Costos</div>
+        <h3>Chau servidor, chau backups, chau licencias.</h3>
+        <p>Adiós a la inversión en servidor del GESTIÓN, a la renovación de Windows, antivirus y al mantenimiento mensual. Esa cuenta desaparece.</p>
+      </article>
+      <article class="pillar">
+        <div class="big">– Tiempo</div>
+        <h3>Menos tareas operativas.</h3>
+        <p>No pesás cada caja abierta. No cargás catálogos. No sincronizás turnos. No hacés el cierre mensual obligatorio. Recuperás horas que vuelven al negocio.</p>
+      </article>
+      <article class="pillar">
+        <div class="big">+ Control</div>
+        <h3>Mirás el negocio en vivo.</h3>
+        <p>Stock, ventas, tesorería y resultado al minuto — desde tu celular, tu tablet o el escritorio. Sin esperar al cierre del turno.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section class="block roles">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Valor por rol</span>
+        <h2>Cada uno<br/>gana algo <span class="accent">propio</span>.</h2>
+      </div>
+      <p class="lede">Cloud fue pensada para toda la cadena: franquiciante, franquiciado y colaboradores de la heladería. Elegí tu rol y ves exactamente qué cambia para vos.</p>
+    </div>
+
+    <div class="role-tabs" role="tablist">
+      <button class="role-tab active" data-role="franquiciado"><span class="dot"></span>Franquiciado</button>
+      <button class="role-tab" data-role="colaborador"><span class="dot"></span>Colaboradores</button>
+      <button class="role-tab" data-role="franquiciante"><span class="dot"></span>Franquiciante</button>
+    </div>
+
+    <div class="role-panel active" data-role="franquiciado">
+      <div>
+        <span class="tag">Vos</span>
+        <h3 class="headline"><span class="thin">Menos trabajo manual,</span><br/>más <span class="accent">rentabilidad</span>.</h3>
+      </div>
+      <ul>
+        <li><span class="k">01</span><span class="t">Cero inversión en servidor local <span>Se termina la compra, renovación y amortización de equipamiento, licencias Windows y antivirus.</span></span></li>
+        <li><span class="k">02</span><span class="t">Facturación electrónica delegada <span>Smartfran gestiona el certificado ARCA en forma centralizada. Cero riesgo de vencimiento, cero costo de renovación.</span></span></li>
+        <li><span class="k">03</span><span class="t">El negocio, en vivo, desde tu celular <span>Ventas, stock, tesorería y resultado actualizados al minuto — donde estés.</span></span></li>
+        <li><span class="k">04</span><span class="t">No gestionás más catálogo ni precios <span>Vienen listos desde el franquiciante. Siempre precios correctos, siempre promociones activas.</span></span></li>
+        <li><span class="k">05</span><span class="t">Inventario flexible, no obligado al día 1 <span>No más recuento total mensual. Controlás lo que querés, cuando querés.</span></span></li>
+      </ul>
+    </div>
+
+    <div class="role-panel" data-role="colaborador">
+      <div>
+        <span class="tag">Equipo de tu heladería</span>
+        <h3 class="headline"><span class="thin">Procesos simples,</span><br/>clientes <span class="accent">contentos</span>.</h3>
+      </div>
+      <ul>
+        <li><span class="k">01</span><span class="t">No se pesa más caja por caja <span>Smartfran infiere el 60% sobre +100k pesajes analizados. Minutos que vuelven al mostrador.</span></span></li>
+        <li><span class="k">02</span><span class="t">Club Grido a la vista durante toda la venta <span>El socio se identifica en cualquier momento. Ventas + canjes en un solo ticket.</span></span></li>
+        <li><span class="k">03</span><span class="t">Pedidos e-commerce tipo tarjetas <span>Arrastrás, cambiás de estado, se acabaron los rechazos por demora. Alarmas visuales y sonoras permanentes.</span></span></li>
+        <li><span class="k">04</span><span class="t">Vistas e impresiones unificadas <span>No importa si el pedido vino de PedidosYa, Rappi o PediGrido: se ve igual y se opera igual.</span></span></li>
+        <li><span class="k">05</span><span class="t">Ya no sincronizás turnos <span>Todo pasa solo, en tiempo real. Una tarea menos al cerrar.</span></span></li>
+      </ul>
+    </div>
+
+    <div class="role-panel" data-role="franquiciante">
+      <div>
+        <span class="tag">Cadena Grido</span>
+        <h3 class="headline"><span class="thin">Gobernanza</span><br/>de <span class="accent">toda la red</span>.</h3>
+      </div>
+      <ul>
+        <li><span class="k">01</span><span class="t">Catálogo, recetas, precios y promociones centralizados <span>Impacto inmediato en todas las heladerías. Fin de las inconsistencias en +1000 bases distribuidas.</span></span></li>
+        <li><span class="k">02</span><span class="t">Despliegue de mejoras en minutos, no meses <span>Una urgencia comercial o correctiva llega a toda la red al instante.</span></span></li>
+        <li><span class="k">03</span><span class="t">Consolidación de datos en Microsoft Fabric <span>BI estratégico sobre datos homologados y gobernados. Comparables entre franquicias.</span></span></li>
+        <li><span class="k">04</span><span class="t">Disponibilidad centralizada en plataformas de pedidos <span>Encender/apagar un producto impacta en PedidosYa, Rappi, PediGrido al mismo tiempo.</span></span></li>
+        <li><span class="k">05</span><span class="t">Seguridad unificada (Auth0 + Azure) <span>Gestión de identidad, MFA y auditoría. Sin credenciales expuestas en cada local.</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CAPACIDADES (interactivas — abren modal con detalle del doc) -->
+<section class="block features" id="capacidades">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Capacidades Cloud</span>
+        <h2>Tocá cada tarjeta<br/>y <span class="accent">ves el detalle</span>.</h2>
+      </div>
+      <p class="lede">Cada capacidad resuelve un problema real que tenés hoy. Hacé click para ver <strong>cómo era antes, cómo es ahora</strong> y el impacto concreto en tu heladería.</p>
+    </div>
+
+    <div class="fgrid">
+      <button class="feat" data-cap="tiempo-real">
+        <span class="idx">01 · Operación</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Información<br/>en tiempo real</h3>
+        <p>Adiós al proceso manual de sincronizar POS con GESTIÓN a turno cerrado.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="sin-servidor">
+        <span class="idx">02 · Costos</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 18v3M16 18v3M4 12h16"/><circle cx="8" cy="9" r="1" fill="currentColor"/></svg></div>
+        <h3>Sin servidor,<br/>sin backups manuales</h3>
+        <p>Desaparece el servidor GESTIÓN, las licencias, el antivirus, el mantenimiento.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="club-grido">
+        <span class="idx">03 · Ventas</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M6 20c0-3 3-5 6-5s6 2 6 5"/><path d="M16.5 6.5l1.5-1.5M7.5 6.5L6 5"/></svg></div>
+        <h3>Club Grido,<br/>en vivo durante la venta</h3>
+        <p>Nombre, puntos, cumpleaños, producto favorito, promociones — todo a la vista.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="smartpedidos">
+        <span class="idx">04 · E-commerce</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/><path d="M6 9h2M16 9h2"/></svg></div>
+        <h3>SmartPedidos<br/>omnicanal</h3>
+        <p>PedidosYa, Rappi, UberEats, Mercado Pago, PediGrido — todos igual.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="stock">
+        <span class="idx">05 · Stock</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18l-2 12H5z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/><path d="M9 12h6"/></svg></div>
+        <h3>Stock inteligente,<br/>sin pesar cajas</h3>
+        <p>Inferencia estadística del 60%. Inventario flexible, desvíos visibles siempre.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="catalogo">
+        <span class="idx">06 · Cadena</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h4M7 14h6"/></svg></div>
+        <h3>Catálogo y precios<br/>centralizados</h3>
+        <p>Ya no gestionás catálogos ni recetas. Vienen listos y siempre correctos.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="bi">
+        <span class="idx">07 · Estrategia</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17l4-4 3 3 5-6 4 5"/><path d="M4 21h16"/></svg></div>
+        <h3>Dashboards<br/>que dirigen el negocio</h3>
+        <p>De operador a empresario. KPIs, drill-down y filtros cruzados sobre Power BI.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="tesoreria">
+        <span class="idx">08 · Plata</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="2.5"/><path d="M6 11h1M17 15h1"/></svg></div>
+        <h3>Tesorería con<br/>trazabilidad completa</h3>
+        <p>Sabés en vivo la plata en cada punto. Menos exposición a robos, más control.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+
+      <button class="feat" data-cap="facturacion">
+        <span class="idx">09 · AFIP/ARCA</span>
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Facturación electrónica<br/>delegada</h3>
+        <p>El certificado lo gestiona Smartfran. Cero riesgo de vencimiento, cero costo.</p>
+        <span class="more">Ver detalle</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- BI · El franquiciado como empresario -->
+<section class="block bi-strat" id="bi">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Inteligencia de negocios</span>
+        <h2>De una <span class="thin">fotografía</span><br/>a una <span class="accent">película interactiva</span>.</h2>
+      </div>
+      <p class="lede">El franquiciado es, ante todo, <strong>un empresario</strong>. Cloud le entrega un tablero pensado para el <strong>análisis estratégico</strong> — una experiencia de usuario que te lleva <strong>de lo general a lo particular</strong>, con filtros cruzados que te muestran exactamente lo que necesitás ver para tomar mejores decisiones.</p>
+    </div>
+
+    <!-- Role shift banner -->
+    <div class="role-shift">
+      <div class="side before">
+        <span class="k">Fotografía</span>
+        <h4>Un PDF fijo,<br/>a fin de mes.</h4>
+        <span class="desc">Mirás el número final. No sabés por qué pasó.</span>
+      </div>
+      <div class="arrow-big">
+        <span class="chev">›</span>
+        <span class="lbl">Cloud · BI</span>
+      </div>
+      <div class="side after">
+        <span class="k">Película interactiva</span>
+        <h4>Recorrés el negocio.<br/>De lo general al <span class="accent">ticket</span>.</h4>
+        <span class="desc">Filtrás, cruzás dimensiones y entendés el porqué.</span>
+      </div>
+    </div>
+
+    <!-- Live dashboard mock -->
+    <div class="bi-dashboard" aria-label="Vista previa del dashboard estratégico">
+      <div class="dash-head">
+        <h4>Resultado · Heladería Av. Rivadavia</h4>
+        <div class="meta">
+          <span><span class="live-pulse"></span>Actualizado hace 12 seg.</span>
+        </div>
+      </div>
+      <div class="filters">
+        <span class="chip active">Hoy</span>
+        <span class="chip">7 días</span>
+        <span class="chip">Mes</span>
+        <span class="chip">YoY</span>
+        <span class="chip">vs. Benchmark red</span>
+        <span class="chip">Turno tarde</span>
+        <span class="chip">Fin de semana</span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <span class="lbl">Facturación hoy</span>
+          <span class="v">$ 1.284<span class="unit">k</span></span>
+          <span class="delta up">▲ 11,4% vs. ayer</span>
+          <svg class="spark" width="60" height="20" viewBox="0 0 60 20"><polyline points="0,15 8,12 16,13 24,9 32,10 40,6 48,8 60,3" fill="none" stroke="#2a8a50" stroke-width="1.6"/></svg>
+        </div>
+        <div class="kpi">
+          <span class="lbl">Ticket promedio</span>
+          <span class="v">$ 4.820</span>
+          <span class="delta up">▲ 6,2% vs. mes</span>
+          <svg class="spark" width="60" height="20" viewBox="0 0 60 20"><polyline points="0,12 10,14 20,11 30,9 40,10 50,7 60,5" fill="none" stroke="#2a8a50" stroke-width="1.6"/></svg>
+        </div>
+        <div class="kpi">
+          <span class="lbl">Margen bruto</span>
+          <span class="v">58,7<span class="unit">%</span></span>
+          <span class="delta dn">▼ 1,8 pp vs. target</span>
+          <svg class="spark" width="60" height="20" viewBox="0 0 60 20"><polyline points="0,8 10,7 20,9 30,10 40,12 50,13 60,14" fill="none" stroke="#c0335d" stroke-width="1.6"/></svg>
+        </div>
+        <div class="kpi">
+          <span class="lbl">Socios Club activos</span>
+          <span class="v">2.147</span>
+          <span class="delta up">▲ 84 esta semana</span>
+          <svg class="spark" width="60" height="20" viewBox="0 0 60 20"><polyline points="0,17 10,15 20,14 30,12 40,11 50,9 60,6" fill="none" stroke="#2a8a50" stroke-width="1.6"/></svg>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="card-mini">
+          <div class="t"><span>Facturación por hora · hoy vs. misma franja semana anterior</span><span class="drill">Drill ↳</span></div>
+          <svg viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+            <g stroke="#e5dbc9" stroke-width="0.5">
+              <line x1="0" y1="30" x2="400" y2="30"/>
+              <line x1="0" y1="60" x2="400" y2="60"/>
+              <line x1="0" y1="90" x2="400" y2="90"/>
+            </g>
+            <!-- Anterior (comparativo) — area -->
+            <path d="M0,88 L40,80 L80,72 L120,64 L160,58 L200,50 L240,42 L280,45 L320,54 L360,66 L400,76 L400,120 L0,120 Z" fill="#e5dbc9" opacity="0.5"/>
+            <polyline points="0,88 40,80 80,72 120,64 160,58 200,50 240,42 280,45 320,54 360,66 400,76" fill="none" stroke="#9E8FE8" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <!-- Hoy — line -->
+            <polyline points="0,92 40,78 80,64 120,52 160,40 200,28 240,22 280,32 320,48 360,62 400,70" fill="none" stroke="#6300FF" stroke-width="2.2"/>
+            <g fill="#6300FF">
+              <circle cx="200" cy="28" r="3.5"/>
+            </g>
+            <text x="205" y="20" fill="#6300FF" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700">Pico 20:30</text>
+            <!-- x labels -->
+            <g fill="#7a6e8c" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">
+              <text x="0" y="115">14h</text>
+              <text x="100" y="115">17h</text>
+              <text x="200" y="115">20h</text>
+              <text x="300" y="115">23h</text>
+            </g>
+          </svg>
+        </div>
+        <div class="card-mini">
+          <div class="t"><span>Top sabores · semana</span><span class="drill">Drill ↳</span></div>
+          <div class="ranking">
+            <div class="r" style="--sw:#7a4a2a;--p:92%"><span class="rk">01</span><span class="nm">Dulce de Leche Granizado <small>sabor ancla</small></span><span class="bar"></span></div>
+            <div class="r" style="--sw:#e7a8c4;--p:78%"><span class="rk">02</span><span class="nm">Frutilla a la Crema</span><span class="bar"></span></div>
+            <div class="r" style="--sw:#4a3d2e;--p:64%"><span class="rk">03</span><span class="nm">Chocolate Suizo</span><span class="bar"></span></div>
+            <div class="r" style="--sw:#2a8a50;--p:42%"><span class="rk">04</span><span class="nm">Pistacho <small>↑ tendencia</small></span><span class="bar"></span></div>
+            <div class="r" style="--sw:#f4e39a;--p:22%"><span class="rk">05</span><span class="nm">Limón al Champagne</span><span class="bar"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What the tool lets you DO -->
+    <div class="bi-use">
+      <div class="box">
+        <span class="num">01</span>
+        <h4>De lo general a lo particular</h4>
+        <p>Empezás por el resultado del mes y <strong>bajás hasta el ticket individual</strong>. Entendés el porqué, no solo el número final.</p>
+      </div>
+      <div class="box">
+        <span class="num">02</span>
+        <h4>Filtros cruzados, flexibilidad total</h4>
+        <p>Franja horaria × sabor × canal × día. Cruzás dimensiones y <strong>ves exactamente lo que necesitás</strong>, sin pedirle nada a nadie.</p>
+      </div>
+      <div class="box">
+        <span class="num">03</span>
+        <h4>Pensado para decidir</h4>
+        <p>No es un reporte: es una <strong>herramienta de análisis</strong>. Cada KPI invita a profundizar, comparar y accionar.</p>
+      </div>
+      <div class="box">
+        <span class="num">04</span>
+        <h4>Evolución continua</h4>
+        <p>El motor es Power BI — sólido, escalable. Lo importante es la <strong>potencia de la herramienta</strong> para mejorar tu toma de decisiones día a día.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUITE (los 3 productos) -->
+<section class="block suite" id="suite">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— La suite completa</span>
+        <h2>Cloud no viene <span class="accent">solo</span>.</h2>
+      </div>
+      <p class="lede">Smartfran es una plataforma integrada. Cloud se potencia con <strong>SmartLoyalty</strong> (Club Grido vivo durante la venta) y <strong>SmartPedidos</strong> (omnicanalidad con plataformas de delivery). Los 3 componentes hablan entre sí sin fricción.</p>
+    </div>
+    <div class="suite-grid">
+      <article class="suite-card cloud">
+        <img class="slogo" src="assets/brand/SmartFran-Cloud-white.png" alt="Smartfran Cloud" />
+        <div class="role">Plataforma core</div>
+        <p>El POS y el backoffice en la nube. Una sola fuente de verdad para toda tu operación, en tiempo real.</p>
+      </article>
+      <article class="suite-card loyalty">
+        <img class="slogo" src="assets/brand/SmartLoyalty.png" alt="SmartLoyalty" />
+        <div class="role">Fidelización</div>
+        <p>Potencia Club Grido. Información del socio siempre a la vista durante la venta: puntos, canjes, cumpleaños, favoritos.</p>
+      </article>
+      <article class="suite-card pedidos">
+        <img class="slogo" src="assets/brand/SmartPedidos.png" alt="SmartPedidos" />
+        <div class="role">Omnicanalidad</div>
+        <p>PedidosYa, Rappi, UberEats, Mercado Pago, PediGrido. Top 3 integradora de PedidosYa en Latinoamérica.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MOCKUP INTERACTIVO -->
+<section class="block mockup" id="probalo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Experiencia interactiva</span>
+        <h2>Probá Cloud<br/><span class="accent">ahora mismo</span>.</h2>
+      </div>
+      <p class="lede">No te contamos cómo es: <strong>lo usás</strong>. El POS de Smartfran Cloud abajo es interactivo. Iniciá sesión, navegá, tocá — tal cual lo usarían tus colaboradores mañana.</p>
+    </div>
+
+    <div class="wrapper">
+      <div class="topbar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="url" id="pos-url-display">grido.pos.smartfran.com</div>
+        <div class="live"><span class="pulse"></span>Demo interactivo</div>
+      </div>
+      <div class="frame-wrap">
+        <iframe id="pos-frame" title="Smartfran Cloud POS — Demo" loading="lazy" src="https://mlombardisf.github.io/smartfran-cloud"></iframe>
+        <div class="empty" id="pos-empty">
+          <div class="ph-ico">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6v6H9z"/><path d="M3 9h3M18 9h3M3 15h3M18 15h3M9 3v3M15 3v3M9 18v3M15 18v3"/></svg>
+          </div>
+          <h3>Subí el mockup al proyecto</h3>
+          <p>Copiá la carpeta del mockup (desde <code>C:/Desarrollos/POS/</code>) a <code>mockup/</code> dentro de este proyecto. La landing lo carga automáticamente desde <code>mockup/login.html</code>.</p>
+          <p class="hint">Tip: también podés cambiar la ruta en Tweaks (abajo a la derecha)</p>
+        </div>
+        <div class="scan"><span class="note">Atención: usa datos de prueba</span></div>
+      </div>
+    </div>
+
+    <p class="mono" style="text-align:center;margin-top:28px;color:var(--muted)">También podés escanear el QR del stand y seguir probándolo desde tu celular.</p>
+  </div>
+</section>
+
+<!-- ROADMAP + IA -->
+<section class="block roadmap" id="roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Roadmap · Lo que viene</span>
+        <h2>Cloud es el <span class="thin">punto de partida,</span><br/>no el <span class="accent">final</span>.</h2>
+      </div>
+      <p class="lede">Dos caminos en paralelo. Por un lado, <strong>evolución continua</strong> de la plataforma. Por el otro, una capa de <strong>inteligencia artificial</strong> que ya está en desarrollo — con demos que podés tocar acá mismo.</p>
+    </div>
+
+    <div class="tracks">
+      <div class="track">
+        <div class="track-head">
+          <div>
+            <div class="kicker">Pista 1 · Evolución de plataforma</div>
+            <h3>Más <span class="accent">velocidad, más control</span>.</h3>
+          </div>
+          <span class="pill live">En curso</span>
+        </div>
+        <div class="milestones">
+          <div class="ms"><span class="q">Q1'26</span><span class="t">Catálogo + disponibilidad centralizada multi-plataforma<small>Un click apaga un producto en PedidosYa, Rappi y PediGrido a la vez</small></span><span class="st">build</span></div>
+          <div class="ms"><span class="q">Q2'26</span><span class="t">Valores de referencia por rubro<small>BI sugiere oportunidades comparando tu tienda con el benchmark de la red</small></span><span class="st">design</span></div>
+          <div class="ms"><span class="q">Q3'26</span><span class="t">App móvil nativa para franquiciados<small>Operación, alarmas y resultados al alcance, sin abrir la laptop</small></span><span class="st">scoped</span></div>
+          <div class="ms"><span class="q">Q4'26</span><span class="t">Circuito completo de recetario y mermas<small>Trazabilidad extremo a extremo desde el insumo hasta la venta</small></span><span class="st">explore</span></div>
+        </div>
+      </div>
+
+      <div class="track innovation">
+        <div class="track-head">
+          <div>
+            <div class="kicker">Pista 2 · Innovación con IA</div>
+            <h3>Smartfran con <span class="accent-v">inteligencia artificial</span>.</h3>
+          </div>
+          <span class="pill live">Demo</span>
+        </div>
+        <div class="milestones">
+          <div class="ms"><span class="q">Now</span><span class="t">Asistente conversacional Smartfran<small>Preguntale al negocio: ventas, stock, alertas — en lenguaje natural</small></span><span class="st">demo →</span></div>
+          <div class="ms"><span class="q">Now</span><span class="t">Carga de facturas con IA<small>Subís foto o PDF y los datos entran solos al sistema</small></span><span class="st">demo →</span></div>
+          <div class="ms"><span class="q">Q2'26</span><span class="t">Recomendación de reposición por sabor<small>Sugerencias diarias calibradas con la baja real de cajas</small></span><span class="st">train</span></div>
+          <div class="ms"><span class="q">Q3'26</span><span class="t">Detección automática de desvíos<small>Cierre diario con flags sobre qué pedir revisar — antes de que te duela</small></span><span class="st">explore</span></div>
+        </div>
+        <div class="demo-bar">
+          <button class="demo-launch" data-demo="chatbot">
+            <span class="ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a3 3 0 0 1-3 3H9l-4 4V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3z"/><circle cx="9" cy="11" r="1" fill="currentColor"/><circle cx="13" cy="11" r="1" fill="currentColor"/><circle cx="17" cy="11" r="1" fill="currentColor"/></svg></span>
+            <span class="txt"><span class="t">Chatbot Smartfran</span><span class="s">Probalo ahora</span></span>
+            <span class="arrow">→</span>
+          </button>
+          <button class="demo-launch" data-demo="invoice">
+            <span class="ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v6h6"/><path d="M9 14h6M9 18h4M9 10h2"/></svg></span>
+            <span class="txt"><span class="t">Carga de facturas con IA</span><span class="s">Probalo ahora</span></span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MIGRATION -->
+<section class="block migration" id="migracion">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Cómo migramos</span>
+        <h2>Pasar a Cloud es<br/>más <span class="accent">simple</span> de lo que creés.</h2>
+      </div>
+      <p class="lede">Diseñamos el proceso para que <strong>no pares el local</strong> ni aprendas un sistema nuevo. Cuatro pasos, acompañados.</p>
+    </div>
+
+    <div class="tline">
+      <div class="step done">
+        <div class="dot"></div>
+        <div class="n">01 · Relevamiento</div>
+        <h3>Entendemos tu operación.</h3>
+        <p>Revisamos tu instalación actual, integraciones y volumen. Sin costo, sin compromiso.</p>
+      </div>
+      <div class="step">
+        <div class="dot"></div>
+        <div class="n">02 · Migración de datos</div>
+        <h3>Llevamos todo, intacto.</h3>
+        <p>Historial, clientes, stock, usuarios, configuraciones. Migración asistida y validada antes del corte.</p>
+      </div>
+      <div class="step">
+        <div class="dot"></div>
+        <div class="n">03 · Capacitación</div>
+        <h3>La misma lógica, más simple.</h3>
+        <p>Formaciones cortas por rol. Los equipos retoman ritmo en menos de una semana.</p>
+      </div>
+      <div class="step">
+        <div class="dot"></div>
+        <div class="n">04 · Go-live acompañado</div>
+        <h3>Arrancamos juntos.</h3>
+        <p>Soporte reforzado las primeras dos semanas. Si algo no anda, lo resolvemos nosotros.</p>
+      </div>
+    </div>
+
+    <div class="promise">
+      <span class="tag">Nuestra promesa</span>
+      <p>Mientras dure la migración, <strong>convivís con On Premise</strong>. No hay día en que tu heladería se quede sin sistema.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section class="block objections">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <span class="eyebrow">— Dudas frecuentes</span>
+        <h2>Lo que nos <span class="accent">preguntan</span><br/>con honestidad.</h2>
+      </div>
+      <p class="lede">Sabemos que migrar genera preguntas. Te las respondemos sin vueltas.</p>
+    </div>
+
+    <div class="obj-grid">
+      <article class="obj">
+        <div class="q">¿Y si se cae internet en el local?</div>
+        <div class="a">Recomendamos un <strong>plan B de conectividad</strong>: línea 4G/5G o suscripción a Starlink según disponibilidad. Las interrupciones son infrecuentes y suelen venir de mal uso del acceso (streaming, compartir a móviles). Con un respaldo simple, el local sigue operando.</div>
+      </article>
+      <article class="obj">
+        <div class="q">¿Pierdo el control de mis datos?</div>
+        <div class="a">Al contrario. Tus datos están en <strong>infraestructura world-class</strong> con cifrado extremo a extremo, backups automáticos y accesos protegidos. Nunca estuvieron más seguros — y siguen siendo tuyos.</div>
+      </article>
+      <article class="obj">
+        <div class="q">¿Cambia mucho la forma de trabajar?</div>
+        <div class="a">No. La <strong>lógica de negocio es la misma</strong>: los flujos que conocés se mantienen. Lo que cambia es la velocidad, la disponibilidad y la experiencia — para mejor.</div>
+      </article>
+      <article class="obj">
+        <div class="q">¿Qué pasa con mi inversión en servidores?</div>
+        <div class="a">Los equipos quedan disponibles para otros usos durante la convivencia. <strong>No renovás licencias, antivirus, ni pagás mantenimiento</strong> — ese costo operativo desaparece con Cloud.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="block cta">
+  <div class="cta-glow"></div>
+  <div class="cta-glow2"></div>
+  <div class="wrap" style="position:relative;z-index:2">
+    <span class="eyebrow">— Feria Grido 2026 · Stand Smartfran</span>
+    <h2><span class="thin">Dejá de mirarlo.</span><br/>Dale al <span class="accent">play</span>.</h2>
+    <p class="lede">Smartfran Cloud está arriba de esta página, funcionando. Entrá, logueate y recorré la plataforma como si ya fuera tu sistema de trabajo. Si después querés profundizar, pasá por el stand.</p>
+
+    <div class="ctrow">
+      <a href="#probalo" class="btn primary big-cta"><span class="live-dot"></span>Probá el POS ahora <span class="arrow">→</span></a>
+    </div>
+
+    <div class="stand">Stand Smartfran · Feria Grido 2026 · Pabellón proveedores estratégicos</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap row">
+    <a href="#" class="sf-logo" aria-label="Smartfran Cloud">
+      <img class="word" src="assets/brand/SmartFran-Cloud-white.png" alt="Smartfran Cloud" />
+    </a>
+    <div class="col">
+      <span>© 2026 Smartfran</span>
+      <span>Proveedor estratégico · Red Grido</span>
+      <a href="#probalo" style="color:var(--accent2)">Probá el POS →</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="close" aria-label="Cerrar">✕</button>
+    <div class="mico" id="m-ico"></div>
+    <div class="meyebrow" id="m-eyebrow"></div>
+    <h2 id="m-title"></h2>
+    <p class="lede" id="m-lede"></p>
+    <div class="split">
+      <div class="col from">
+        <div class="tag">Antes · On Premise</div>
+        <h4 id="m-before-h"></h4>
+        <p id="m-before-p"></p>
+      </div>
+      <div class="col to">
+        <div class="tag">Ahora · Cloud</div>
+        <h4 id="m-after-h"></h4>
+        <p id="m-after-p"></p>
+      </div>
+    </div>
+    <ul class="bullets" id="m-bullets"></ul>
+    <div class="impact">
+      <span class="lb">Impacto</span>
+      <span class="tx" id="m-impact"></span>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO MODALS -->
+<div class="demo-modal" id="demo-chatbot" aria-hidden="true">
+  <div class="demo-sheet">
+    <div class="sheet-head">
+      <div class="t"><span class="live-dot"></span>Asistente Smartfran · Demo</div>
+      <button class="close" data-close-demo>✕</button>
+    </div>
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button data-q="¿Cómo van las ventas de hoy comparadas con ayer?">Ventas de hoy vs. ayer</button>
+      <button data-q="¿Qué sabor de helado se está moviendo más esta semana?">Sabor top de la semana</button>
+      <button data-q="¿Tengo algún desvío de stock que deba revisar hoy?">Desvíos de stock hoy</button>
+      <button data-q="¿Cuánto efectivo hay ahora en los cajones de la heladería?">Efectivo en cajones</button>
+    </div>
+    <div class="chat-body">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg bot">Soy el asistente de <strong>Smartfran Cloud</strong>. Preguntame por ventas, stock, desvíos o Club Grido — respondo como si tuviera tu negocio en la mano.</div>
+      </div>
+      <form class="chat-input" id="chat-form">
+        <input id="chat-text" placeholder="Escribí tu pregunta…" autocomplete="off" />
+        <button type="submit" id="chat-send">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="demo-modal" id="demo-invoice" aria-hidden="true">
+  <div class="demo-sheet">
+    <div class="sheet-head">
+      <div class="t"><span class="live-dot"></span>Carga de facturas con IA · Demo</div>
+      <button class="close" data-close-demo>✕</button>
+    </div>
+    <div class="inv-body">
+      <div class="inv-drop" id="inv-drop">
+        <div class="title">Factura recibida</div>
+        <div class="paper">
+          <h5>FACTURA A <span>N° 0003-00014782</span></h5>
+          <div class="meta">Grido Helados S.A. · CUIT 30-70789654-3<br/>Fecha: 14/03/2026 · Cond.: Cta. Cte.</div>
+          <table>
+            <thead><tr><th>Producto</th><th>Cant.</th><th>P.Unit.</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>Caja DDL Granizado 4kg</td><td class="num">8</td><td class="num">18.400</td><td class="num">147.200</td></tr>
+              <tr><td>Caja Frutilla Crema 4kg</td><td class="num">6</td><td class="num">17.800</td><td class="num">106.800</td></tr>
+              <tr><td>Caja Chocolate Suizo 4kg</td><td class="num">5</td><td class="num">19.200</td><td class="num">96.000</td></tr>
+              <tr><td>Palitos Bombón x24</td><td class="num">12</td><td class="num">8.400</td><td class="num">100.800</td></tr>
+            </tbody>
+          </table>
+          <div class="tot">Total: $ 450.800</div>
+        </div>
+        <div class="scan-line"></div>
+      </div>
+      <div class="inv-extracted" id="inv-extracted">
+        <div class="title">Datos extraídos</div>
+        <div class="field" data-step="1"><span class="k">Proveedor</span><span class="v">Grido Helados S.A.</span></div>
+        <div class="field" data-step="2"><span class="k">CUIT</span><span class="v">30-70789654-3</span></div>
+        <div class="field" data-step="3"><span class="k">Tipo / N°</span><span class="v">A · 0003-00014782</span></div>
+        <div class="field" data-step="4"><span class="k">Fecha</span><span class="v">14/03/2026</span></div>
+        <div class="field" data-step="5"><span class="k">Ítems reconocidos</span><span class="v ok">4 / 4</span></div>
+        <div class="field" data-step="6"><span class="k">Total</span><span class="v">$ 450.800</span></div>
+        <div class="status" id="inv-status">✓ Cargada a Cloud · stock actualizado</div>
+        <button class="inv-reset" id="inv-reset">↻ Reiniciar demo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TWEAKS -->
+<div id="tweaks" aria-hidden="true">
+  <h4>Tweaks</h4>
+  <div class="f"><label>Fondo</label><input type="color" data-k="bg"></div>
+  <div class="f"><label>Superficie</label><input type="color" data-k="surface"></div>
+  <div class="f"><label>Violeta</label><input type="color" data-k="accent"></div>
+  <div class="f"><label>Amarillo</label><input type="color" data-k="accent2"></div>
+  <div class="f"><label>Cian</label><input type="color" data-k="accent3"></div>
+  <div class="f" style="flex-direction:column;align-items:stretch;gap:6px">
+    <label style="align-self:flex-start">Ruta al mockup POS</label>
+    <input type="text" data-k="posUrl" placeholder="mockup/login.html">
+  </div>
+  <div class="note">Paleta Smartfran · violeta #6300FF · amarillo #F0B034 · cian #2CCED7<br/><br/>Para embeber el POS: copiá la carpeta C:/Desarrollos/POS a /mockup del proyecto.</div>
+</div>
+
+<script>
+  // CAPABILITY DATA (from aporte-valor doc)
+  const CAPS = {
+    'tiempo-real': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+      eyebrow: 'Operación · Tiempo real',
+      title: 'Adiós al proceso de <span class="accent">sincronización</span>.',
+      lede: 'Hoy, la información viaja entre cada POS y el GESTIÓN a través de un proceso manual que se ejecuta <strong>a turno cerrado</strong>. Mientras tanto, no ves en tiempo real lo que pasa en tus heladerías.',
+      beforeH: 'Sincronización manual, a demanda',
+      beforeP: 'Del GESTIÓN al POS: catálogo, precios, promociones. Del POS al GESTIÓN: ventas, stock, cobranzas — solo después de cerrar el turno.',
+      afterH: '100% online en tiempo real',
+      afterP: 'Todo disponible al instante, desde cualquier dispositivo. El proceso de sincronización simplemente desaparece.',
+      bullets: [
+        'Ves las ventas de tu heladería minuto a minuto, no al cierre',
+        'Las promos y precios aplican en todos los POS al mismo tiempo',
+        'Te olvidás de "dale sincronizar" entre turnos'
+      ],
+      impact: 'Menos tareas operativas, mejor visibilidad del negocio en vivo.'
+    },
+    'sin-servidor': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 18v3M16 18v3M4 12h16"/><circle cx="8" cy="9" r="1" fill="currentColor"/></svg>',
+      eyebrow: 'Costos · Infraestructura',
+      title: 'Se va el servidor. Y toda <span class="accent">su cuenta</span>.',
+      lede: 'Tener un GESTIÓN local implica <strong>inversión inicial, amortización, renovación por obsolescencia y un gasto mensual</strong>: arreglos, internet, luz, mantenimiento técnico, gestión de backups. Todo eso desaparece.',
+      beforeH: 'Servidor propio + licencias + soporte',
+      beforeP: 'Compra de equipamiento, licencias Windows y antivirus, gestión manual de backups (que muchas veces no se hacen). Riesgo constante de indisponibilidad.',
+      afterH: 'Cero infraestructura local',
+      afterP: 'La plataforma corre en infraestructura world-class administrada por Smartfran. Backups automáticos, alta disponibilidad, sin intervención tuya.',
+      bullets: [
+        'Cero inversión inicial en servidor',
+        'Cero renovación de licencias Windows y antivirus',
+        'Cero gasto en mantenimiento técnico mensual',
+        'Cero pérdida de información por backups mal hechos'
+      ],
+      impact: 'Un costo fijo mensual menos en tu franquicia — mes a mes, año a año.'
+    },
+    'club-grido': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M6 20c0-3 3-5 6-5s6 2 6 5"/><path d="M16.5 6.5l1.5-1.5M7.5 6.5L6 5"/></svg>',
+      eyebrow: 'Ventas · Fidelización',
+      title: 'Club Grido, <span class="accent">vivo</span> durante toda la venta.',
+      lede: 'Desplegado sobre plataforma <strong>SmartLoyalty</strong>. Durante la atención el colaborador ve toda la información del socio y puede interactuar con más cercanía, generar ofrecimientos y sobreventas.',
+      beforeH: 'Identificación al inicio, info limitada',
+      beforeP: 'Había que identificar al socio al arrancar la venta. Poca información visible, dificultad para combinar ventas con canjes.',
+      afterH: 'Info completa del socio, siempre a la vista',
+      afterP: 'Nombre, puntos disponibles, última compra, cumpleaños, producto favorito, promociones y canjes disponibles — durante toda la venta.',
+      bullets: [
+        'Identificás al socio en cualquier momento, sin empezar de cero',
+        'Ventas + canjes en un solo ticket',
+        'Ofrecimientos personalizados → sobreventas → ticket promedio más alto',
+        'Mayor frecuencia de compra, mejor retención'
+      ],
+      impact: 'Incremento del ticket promedio y de la lealtad hacia la marca.'
+    },
+    'smartpedidos': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/><path d="M6 9h2M16 9h2"/></svg>',
+      eyebrow: 'E-commerce · Omnicanalidad',
+      title: 'Todos los pedidos, <span class="accent">una sola vista</span>.',
+      lede: 'Integración con <strong>PedidosYa, Rappi, UberEats, Mercado Pago Delivery, I+D Iot y PediGrido</strong>. SmartPedidos es top 3 integradoras de PedidosYa en Latinoamérica — estable y robusta.',
+      beforeH: 'Gestión separada por plataforma',
+      beforeP: 'Una vista por cada integrador. Impresiones distintas. Mayor riesgo de rechazos por demoras. Gestión manual de disponibilidad plataforma por plataforma.',
+      afterH: 'Tarjetas arrastrables + alarmas',
+      afterP: 'Experiencia tipo kanban: arrastrás el pedido entre estados. Alarmas visuales y sonoras permanentes que evitan rechazos por falta de gestión.',
+      bullets: [
+        'Alarmas evitan rechazos de pedidos por demora',
+        'Vista e impresión unificadas, sin importar la plataforma',
+        'Intercambio de información acelerado → menos rechazos',
+        'Roadmap: catálogo y disponibilidad centralizada en todas las plataformas a la vez'
+      ],
+      impact: 'Menos rechazos, clientes más satisfechos, más recompra.'
+    },
+    'stock': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18l-2 12H5z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/><path d="M9 12h6"/></svg>',
+      eyebrow: 'Stock · Operación diaria',
+      title: 'Se terminó el <span class="accent">pesaje</span> de cada caja.',
+      lede: 'Tras analizar <strong>más de cien mil pesajes</strong>, validamos que el promedio es 60% por caja abierta. Esa inferencia estadística te ahorra horas de operación — con igual o mayor precisión. Y el circuito de compras entra solo desde SAP.',
+      beforeH: 'Pesaje manual + carga manual',
+      beforeP: 'Cajas pesadas una por una. Remitos de compra tipeados a mano. Cierre mensual total obligatorio el día 1, antes de abrir. Horas perdidas y diferencias de inventario.',
+      afterH: 'Inferencia + automatización del circuito',
+      afterP: 'No pesás más. Las bajas de caja son el dato duro. Los remitos de compra entran automáticamente desde SAP. El stock se actualiza en vivo sin tocar una tecla.',
+      bullets: [
+        'Baja obligatoria de cajas (10 segundos): dato duro de consumo real por sabor',
+        '<strong>Remitos de compra desde SAP · automáticos</strong> — cero doble carga, cero errores de tipeo',
+        'Bombones/palitos: registro automático con doble movimiento',
+        'Movimientos entre depósitos con estado "en tránsito"',
+        'Desvío por sabor y por producto visible en todo momento, no solo al cierre'
+      ],
+      impact: 'Horas recuperadas cada mes + reposición optimizada + menos rotura de stock + cero errores de carga manual.'
+    },
+    'catalogo': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h4M7 14h6"/></svg>',
+      eyebrow: 'Cadena · Gobernanza',
+      title: 'Catálogo, recetas y precios: ya <span class="accent">no los gestionás</span>.',
+      lede: 'Hoy esa información está replicada <strong>más de 1.000 veces</strong> en distintos servidores, generando inconsistencias y requiriendo gestión manual en cada franquicia. Con Cloud, el franquiciante lo administra una vez y llega a todas las heladerías.',
+      beforeH: 'Cada franquiciado gestiona lo suyo',
+      beforeP: 'Inconsistencias en precios, promociones mal cargadas, recetas desactualizadas. Tiempo valioso invertido en tareas que no agregan valor.',
+      afterH: 'Centralizado por el franquiciante',
+      afterP: 'Precios correctos, promociones activas, recetas homologadas — siempre y en todas tus tiendas al mismo tiempo.',
+      bullets: [
+        'Operás siempre con los precios correctos',
+        'Ofrecés todas las promociones vigentes',
+        'Tu gestión de stock es 100% correcta (recetas, bultos, kilos)',
+        'Ya no sos responsable de cargar cambios comerciales'
+      ],
+      impact: 'Menos tiempo gestionando el sistema, más tiempo gestionando el negocio.'
+    },
+    'bi': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17l4-4 3 3 5-6 4 5"/><path d="M4 21h16"/></svg>',
+      eyebrow: 'Estrategia · BI sobre Power BI',
+      title: 'Dashboards que <span class="accent">dirigen el negocio</span>.',
+      lede: 'El franquiciado <strong>deja de operar y empieza a conducir</strong>. Tableros construidos sobre Power BI que te dan el pulso del negocio en vivo, con drill-down de lo general a lo particular y filtros cruzados que responden preguntas de negocio en tres clicks.',
+      beforeH: 'Reportes estáticos, al cierre',
+      beforeP: 'Había que esperar al cierre de mes para tener visibilidad. Planillas armadas a mano, información fragmentada, decisiones reactivas a lo que ya pasó.',
+      afterH: 'Tableros vivos para la toma de decisiones',
+      afterP: 'KPIs hoy, 7 días, mes, YoY y vs. benchmark de la red. De lo general al ticket individual. La conducción del negocio deja de ser intuición y se vuelve evidencia.',
+      bullets: [
+        'KPIs clave siempre a la vista: facturación, ticket promedio, margen, socios activos',
+        '<strong>Drill-down</strong> desde el resultado mensual hasta el ticket individual',
+        '<strong>Filtros cruzados</strong>: franja horaria × sabor × canal × día de la semana',
+        'Comparación automática contra tu histórico y contra el benchmark de la red',
+        'Estructura de gastos homologada y comparable entre franquicias',
+        'Ajustás turnos, promos, mix y precios <strong>en caliente</strong>, sin esperar al cierre'
+      ],
+      impact: 'El franquiciado pasa de tapar agujeros a dirigir un negocio — con KPIs y decisiones basadas en evidencia.'
+    },
+    'tesoreria': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="2.5"/></svg>',
+      eyebrow: 'Tesorería · Plata',
+      title: '<span class="accent">Trazabilidad completa</span> del dinero.',
+      lede: 'Información en línea te permite <strong>saber en cualquier momento</strong> las disponibilidades reales en cualquier punto de venta o globalmente.',
+      beforeH: 'Info desactualizada hasta sincronizar',
+      beforeP: 'Menor trazabilidad del efectivo. Había que esperar la sincronización de cada POS para ver totales.',
+      afterH: 'Trazabilidad completa en tiempo real',
+      afterP: 'Sabés en vivo cuánta plata hay en cada cajón, buzón, billetera virtual o cuenta bancaria. Organizás retiros para bajar exposición a robos.',
+      bullets: [
+        'Clasificación entre cajones, buzones, plataformas, MercadoPago, billeteras, bancos',
+        'Sugerís retiros a colaboradores para reducir riesgo',
+        'Gestión consolidada de depósitos y movimientos'
+      ],
+      impact: 'Menos exposición a robos, mejor flujo de caja, control total.'
+    },
+    'facturacion': {
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>',
+      eyebrow: 'Facturación · ARCA',
+      title: 'El certificado digital lo <span class="accent">gestionamos nosotros</span>.',
+      lede: 'Nuevo esquema de <strong>delegación de los servicios de facturación electrónica de ARCA</strong>. El certificado digital lo administra Smartfran en forma centralizada — vos te ocupás de vender.',
+      beforeH: 'Certificado individual por franquiciado',
+      beforeP: 'Renovación manual del certificado. Riesgo de vencimiento → bloqueo de la facturación → incumplimiento fiscal. Costo anual de renovación.',
+      afterH: 'Gestión centralizada por Smartfran',
+      afterP: 'Cero riesgo de vencimiento. Cero costo de renovación. Cero incumplimiento fiscal por algo que no te avisaron a tiempo.',
+      bullets: [
+        'Sin renovación manual del certificado ARCA',
+        'Sin riesgo de bloqueo de facturación',
+        'Sin costo anual por el certificado',
+        'Smartfran monitorea y gestiona todo por vos'
+      ],
+      impact: 'Una preocupación fiscal menos, y un gasto anual que desaparece.'
+    }
+  };
+  // Modal logic
+  const modal = document.getElementById('modal');
+  const closeBtn = modal.querySelector('.close');
+  function openCap(key){
+    const c = CAPS[key]; if(!c) return;
+    document.getElementById('m-ico').innerHTML = c.icon;
+    document.getElementById('m-eyebrow').textContent = c.eyebrow;
+    document.getElementById('m-title').innerHTML = c.title;
+    document.getElementById('m-lede').innerHTML = c.lede;
+    document.getElementById('m-before-h').textContent = c.beforeH;
+    document.getElementById('m-before-p').textContent = c.beforeP;
+    document.getElementById('m-after-h').textContent = c.afterH;
+    document.getElementById('m-after-p').textContent = c.afterP;
+    document.getElementById('m-bullets').innerHTML = c.bullets.map(b => `<li>${b}</li>`).join('');
+    document.getElementById('m-impact').textContent = c.impact;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){ modal.classList.remove('open'); document.body.style.overflow = ''; }
+  document.querySelectorAll('.feat').forEach(b => b.addEventListener('click', () => openCap(b.dataset.cap)));
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+  // Role tabs
+  document.querySelectorAll('.role-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const r = tab.dataset.role;
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.role-panel').forEach(p => p.classList.toggle('active', p.dataset.role === r));
+    });
+  });
+
+  // POS iframe loader
+  const POS_DESIGN_WIDTH = 1280; // ancho natural del POS — ajustar si hace falta
+
+  function scalePosIframe(){
+    requestAnimationFrame(function(){
+      const wrap = document.querySelector('.mockup .frame-wrap');
+      const frame = document.getElementById('pos-frame');
+      if(!wrap || !frame) return;
+      const rect = wrap.getBoundingClientRect();
+      const W = rect.width || wrap.offsetWidth;
+      const H = rect.height || wrap.offsetHeight || (W * 10 / 16);
+      if(!W || !H) return;
+      const scale = W / POS_DESIGN_WIDTH;
+      frame.style.width  = POS_DESIGN_WIDTH + 9 + 'px';
+      frame.style.height = Math.round(H / scale) + 'px';
+      frame.style.transform = 'scale(' + scale + ')';
+    });
+  }
+
+  function loadPos(url){
+    const frame = document.getElementById('pos-frame');
+    const empty = document.getElementById('pos-empty');
+    const urlDisplay = document.getElementById('pos-url-display');
+    urlDisplay.textContent = TWEAKS.posDisplayUrl || url;
+    empty.style.display = 'none';
+    let loaded = false;
+    frame.onload = () => { loaded = true; empty.style.display = 'none'; };
+    frame.src = url;
+    setTimeout(() => { if(!loaded){ empty.style.display = 'flex'; } }, 4000);
+  }
+
+  loadPos(TWEAKS.posUrl);
+
+  // Escalar al cargar y al redimensionar
+  window.addEventListener('load', scalePosIframe);
+  window.addEventListener('resize', scalePosIframe);
+  new ResizeObserver(scalePosIframe).observe(document.querySelector('.mockup .frame-wrap'));
+  scalePosIframe();
+
+  // TWEAKS
+  function applyTweaks(t){
+    const r = document.documentElement;
+    const map = {bg:'--bg',surface:'--surface',surface2:'--surface2',ink:'--ink',muted:'--muted',line:'--line',accent:'--accent',accent2:'--accent2',accent3:'--accent3'};
+    for(const k in map){ if(t[k]) r.style.setProperty(map[k], t[k]); }
+  }
+  applyTweaks(TWEAKS);
+
+  document.querySelectorAll('#tweaks input').forEach(inp => {
+    const k = inp.dataset.k;
+    if(TWEAKS[k]) inp.value = TWEAKS[k];
+    inp.addEventListener('input', () => {
+      TWEAKS[k] = inp.value;
+      if(k === 'posUrl') loadPos(inp.value);
+      else applyTweaks(TWEAKS);
+      try{ window.parent.postMessage({type:'__edit_mode_set_keys', edits:{[k]: inp.value}}, '*'); }catch(e){}
+    });
+  });
+
+  window.addEventListener('message', e => {
+    const d = e.data || {};
+    if(d.type === '__activate_edit_mode') document.getElementById('tweaks').classList.add('show');
+    else if(d.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('show');
+  });
+  try{ window.parent.postMessage({type:'__edit_mode_available'}, '*'); }catch(e){}
+
+  // ==================== DEMOS ====================
+  // Demo launchers
+  document.querySelectorAll('[data-demo]').forEach(b => {
+    b.addEventListener('click', () => {
+      const kind = b.dataset.demo;
+      const el = document.getElementById('demo-' + kind);
+      if(!el) return;
+      el.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      if(kind === 'invoice') runInvoiceDemo();
+    });
+  });
+  document.querySelectorAll('[data-close-demo]').forEach(b => b.addEventListener('click', closeDemos));
+  document.querySelectorAll('.demo-modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeDemos(); }));
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDemos(); });
+  function closeDemos(){
+    document.querySelectorAll('.demo-modal').forEach(m => m.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+
+  // ----- Chatbot -----
+  const chatMsgs = document.getElementById('chat-messages');
+  const chatForm = document.getElementById('chat-form');
+  const chatText = document.getElementById('chat-text');
+  const chatSend = document.getElementById('chat-send');
+  function addMsg(role, text){
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+    chatMsgs.appendChild(div);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return div;
+  }
+  function addTyping(){
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatMsgs.appendChild(div);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return div;
+  }
+  const history = [{
+    role: 'user',
+    content: `Sos el asistente de Smartfran Cloud, la plataforma SaaS que usan las heladerías de la red Grido en Argentina. Respondés en español rioplatense, tono cercano y profesional, nunca inventás cifras reales: inventá datos de ejemplo PLAUSIBLES cuando te pregunten por ventas/stock/desvíos (siempre en pesos argentinos, con kilos de helado, cajas, sabores tipo Dulce de Leche Granizado, Frutilla a la Crema, Chocolate Suizo, etc.). Respondés CORTO (máximo 4-5 líneas) y estructurado: un número clave, un contexto, y un próximo paso si aplica. No uses markdown, respondé en texto plano con saltos de línea. No te presentes de nuevo, ya sabe quién sos.`
+  }, {
+    role: 'assistant',
+    content: 'Listo, ¿qué querés saber del negocio?'
+  }];
+
+  async function sendChat(q){
+    if(!q.trim()) return;
+    addMsg('user', q);
+    history.push({ role: 'user', content: q });
+    chatText.value = '';
+    chatSend.disabled = true;
+    const typing = addTyping();
+    try{
+      const res = await window.claude.complete({ messages: history });
+      typing.remove();
+      addMsg('bot', res);
+      history.push({ role: 'assistant', content: res });
+    }catch(err){
+      typing.remove();
+      addMsg('bot', 'Ups, no pude responder en este momento. Probá de nuevo.');
+    }finally{
+      chatSend.disabled = false;
+      chatText.focus();
+    }
+  }
+  chatForm.addEventListener('submit', e => { e.preventDefault(); sendChat(chatText.value); });
+  document.querySelectorAll('#chat-suggestions button').forEach(b => {
+    b.addEventListener('click', () => sendChat(b.dataset.q));
+  });
+
+  // ----- Invoice demo -----
+  const invDrop = document.getElementById('inv-drop');
+  const invStatus = document.getElementById('inv-status');
+  const invFields = document.querySelectorAll('#inv-extracted .field');
+  document.getElementById('inv-reset').addEventListener('click', runInvoiceDemo);
+  function runInvoiceDemo(){
+    invFields.forEach(f => f.classList.remove('in'));
+    invStatus.classList.remove('in');
+    invDrop.classList.add('processing');
+    invFields.forEach((f, i) => {
+      setTimeout(() => f.classList.add('in'), 600 + i * 400);
+    });
+    setTimeout(() => {
+      invDrop.classList.remove('processing');
+      invStatus.classList.add('in');
+    }, 600 + invFields.length * 400 + 200);
+  }
+</script>
+
+</body>
+</html>
